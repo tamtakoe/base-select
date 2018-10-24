@@ -1,0 +1,43 @@
+<fieldset style="min-height: 160px">
+    <legend>Value generator</legend>
+    <table width="100%">
+        <tr>
+            <td style="width: 280px">
+                <div>
+                    <div class="value-item-custom-radio-group"></div>
+
+                    <div id="valueItemPredefinedGroup" style="padding-left: 1.5em">
+                        <div>
+                            <label>
+                                <input type="checkbox" id="valueItemArray"> Array
+                            </label>
+
+                            <div id="valueItemArrayGroup" style="padding-left: 1.5em">
+                                <label>
+                                    Amount <input type="number" style="width: 40px" id="valueItemArrayAmount" value=3>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="valueItemSimple"> Simple
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <br/>
+                <div>
+                    <button id="cleanValueBtn">Clear</button>
+                    <button id="loadValueBtn">Load</button>
+                    <label>
+                        with delay <input type="number" style="width: 40px" id="valueDelayInput" value=0> s
+                    </label>
+                </div>
+            </td>
+            <td style="max-width: 300px">
+                <div class="example-code-area" style="height: 130px"></div>
+            </td>
+        </tr>
+    </table>
+</fieldset>

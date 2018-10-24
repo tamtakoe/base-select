@@ -1,0 +1,74 @@
+//Material design
+.base-select {
+  font: inherit;
+
+  .select-search {
+    border-radius: 4px;
+
+    &-list {
+      &-item {
+        &_selection {
+          border-radius: .2rem;
+
+          &.active {
+            border-radius: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .select-dropdown {
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6);
+  }
+
+  &.focused .select-search {
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6);
+  }
+
+  &.limited, &.invalid-item {
+    .select-search, .select-dropdown {
+      box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(230,189,46,0.6);
+    }
+  }
+
+  &:not(.above) {
+    .select-dropdown {
+      border-radius: 0 0 4px 4px;
+    }
+
+    &.open .select-search {
+      border-radius: 4px 4px 0 0;
+    }
+  }
+
+  &.above {
+    .select-dropdown {
+      border-radius: 4px 4px 0 0;
+    }
+
+    &.open .select-search {
+      border-radius: 0 0 4px 4px;
+    }
+  }
+
+
+  // Customization
+  &-sm {
+    font-size: .875em;
+    line-height: 1.5;
+
+    .select-search-list-item {
+      padding: 0 .25rem;
+    }
+  }
+
+  &-lg {
+    font-size: 1.25em;
+    line-height: 1.5;
+
+    .select-search-list-item {
+      padding: .2rem .65rem;
+    }
+  }
+}

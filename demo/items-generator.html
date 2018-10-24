@@ -1,0 +1,52 @@
+<fieldset style="min-height: 160px">
+    <legend>Items generator</legend>
+    <table width="100%">
+        <tr>
+            <td width="280px">
+                <div>
+                    <label>
+                        Amount <input type="number" style="width: 60px" id="itemsAmountInput" value=10>
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="checkbox" id="itemsSimpleCheckbox"> Simple
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="checkbox" id="itemsGetterCheckbox"> Getter
+                    </label>
+
+                    <div id="itemsGetterGroup" style="padding-left: 1.5em">
+                        <div>
+                            <label>
+                                Timeout <input type="number" style="width: 40px" id="itemsGetterTimeoutInput" value=1> s
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="itemsGetterPaginationCheckbox"> Pagination (5 items per page)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <br/>
+                <div>
+                    <button id="cleanItemsBtn">Clear</button>
+                    <button id="loadItemsBtn">Load</button>
+                    <label>
+                        with delay <input type="number" style="width: 40px" id="itemsDelayInput" value=0> s
+                    </label>
+                </div>
+            </td>
+            <td style="max-width: 300px">
+                <div style="height: 130px" class="example-code-area"></div>
+            </td>
+        </tr>
+    </table>
+
+
+
+</fieldset>
