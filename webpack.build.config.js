@@ -26,9 +26,11 @@ module.exports = {
                     },
                     {
                         loader: 'css-loader',
-                        options: {
-                            localIdentName: 'base-select'
-                        }
+                        // options: {
+                        //     modules: {
+                        //         localIdentName: 'base-select'
+                        //     }
+                        // }
                     },
                     {
                         loader: 'resolve-url-loader',

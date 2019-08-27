@@ -51,7 +51,7 @@ export declare abstract class SelectDom {
     focus(): void;
     blur(): void;
     setMultiple(isMultiple: boolean): void;
-    getSelectedItemElementByItem(item: any): {};
+    getSelectedItemElementByItem(item: any): unknown;
     getListElementByItem(item: any): any;
     updateLabel(element: any, labelGetter: any, item: any, query?: any, extraLabelElement?: any): any;
     createListItemsGroupElement(groupName: any): any;

@@ -447,9 +447,9 @@ export abstract class SelectDom {
         const label = labelGetter(item, query);
         // console.log(item.name, isDisabled);
 
-        if (typeof label === 'string') {
+        if (typeof label === 'string' || typeof label === 'number') {
             extraLabelElement = extraLabelElement ? extraLabelElement.outerHTML : '';
-            element.innerHTML = label + extraLabelElement;
+            element.innerHTML = String(label) + extraLabelElement;
 
         } else if (label) {
             element.innerHTML = '';
@@ -536,6 +536,7 @@ export abstract class SelectDom {
 
     // DOM manipulations
     insertSelectedElements(items = []) {
+        console.log(555, items);
         updateElements(this.tmpl.searchContainer, items, this.createSelectedItemElement.bind(this), this.params.trackFieldGetter, true);
         this.postRenderSelectedElements();
     }

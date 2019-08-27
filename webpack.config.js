@@ -40,9 +40,11 @@ const webpackConfig = {
                     // },
                     {
                         loader: 'css-loader',
-                        options: {
-                            localIdentName: 'base-select'
-                        }
+                        // options: {
+                        //     modules: {
+                        //         localIdentName: 'base-select'
+                        //     }
+                        // }
                     },
                     {
                         loader: 'resolve-url-loader',
@@ -84,10 +86,7 @@ const webpackConfig = {
 
 if (noShadowDom) {
     webpackConfig.module.rules[1].use.unshift({
-        loader: 'style-loader',
-        options: {
-            sourceMap: true,
-        },
+        loader: 'style-loader'
     });
 }
 
