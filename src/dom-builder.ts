@@ -536,7 +536,6 @@ export abstract class SelectDom {
 
     // DOM manipulations
     insertSelectedElements(items = []) {
-        console.log(555, items);
         updateElements(this.tmpl.searchContainer, items, this.createSelectedItemElement.bind(this), this.params.trackFieldGetter, true);
         this.postRenderSelectedElements();
     }
