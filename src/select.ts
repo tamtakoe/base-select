@@ -243,7 +243,7 @@ export class Select extends SelectDom {
     }
 
     // Items loader
-    loadListItems(query?) {
+    loadListItems(query: any = '') {
         this.setLoading(true);
         // console.log('Loading... ', query, 'From cache:', !!this.cache.get(query));
 
@@ -255,7 +255,7 @@ export class Select extends SelectDom {
         } else {
             // Needs to understand how many selected items we already have for this query
             // and how many extra items we need to request server.
-            // For case if server sends items by chunks/pages. In situation if we move most of received items
+            // Case: if server sends items by chunks/pages. In situation if we move most of received items
             // to selected list and have just several or zero items in the dropdown list
             // we need to request server more items or items except selected.
             let options;
