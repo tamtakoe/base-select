@@ -12,12 +12,15 @@
   },
   "devDependencies": {
     "awesome-typescript-loader": "^5.2.1",
+    "bootstrap": "^4.3.1",
     "copy-webpack-plugin": "^5.0.4",
     "css-loader": "^3.2.0",
     "file-loader": "^4.2.0",
+    "foundation-sites": "^6.5.3",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "json-loader": "^0.5.7",
+    "materialize-css": "^1.0.0",
     "node-sass": "^4.12.0",
     "resolve-url-loader": "^3.1.0",
     "rimraf": "^3.0.0",
@@ -27,10 +30,7 @@
     "url-loader": "^2.1.0",
     "webpack": "^4.39.2",
     "webpack-cli": "^3.3.7",
-    "webpack-dev-server": "^3.8.0",
-    "bootstrap": "^4.3.1",
-    "foundation-sites": "^6.5.3",
-    "materialize-css": "^1.0.0"
+    "webpack-dev-server": "^3.8.0"
   },
   "main": "./dist/select.js",
   "types": "./dist/select.d.ts",
@@ -39,7 +39,7 @@
     "url": "https://github.com/tamtakoe/base-select"
   },
   "engines": {
-    "node": ">= 8.0.0",
+    "node": ">= 12.0.0 < 14.0.0",
     "npm": ">= 5"
   },
   "dependencies": {
