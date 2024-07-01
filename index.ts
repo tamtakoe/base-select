@@ -19,7 +19,7 @@ class StyleLinks {
     constructor(private documentRef: Document) {}
 
     add(fileName: string) {
-        const link = document.createElement('link');
+        const link = this.documentRef.createElement('link');
     
         link.href = fileName;
         link.rel = 'stylesheet';
@@ -31,7 +31,8 @@ class StyleLinks {
         this.links.forEach(link => link.remove())
     }
 }
-const documentRef = document as any
+const documentRef = typeof document !== 'undefined' ? document : null
+const windowRef = typeof window !== 'undefined' ? window : null
 const styleBaseLinks = new StyleLinks(documentRef)
 const styleFrameworkLinks = new StyleLinks(documentRef)
 
@@ -237,12 +238,12 @@ class UrlParamsStore {
 
     constructor(defaultParams: any) {
         let urlParams: any;
-        (window.onpopstate = () => {
+        (windowRef.onpopstate = () => {
             let match: any,
                 pl     = /\+/g,  // Regex for replacing addition symbol with a space
                 search = /([^&=]+)=?([^&]*)/g,
                 decode = function (s: string) { return decodeURIComponent(s.replace(pl, " ")); },
-                query  = window.location.search.substring(1);
+                query  = windowRef.location.search.substring(1);
 
             urlParams = {};
             while (match = search.exec(query))
@@ -259,7 +260,7 @@ class UrlParamsStore {
         const paramsHash = LZString.compressToEncodedURIComponent(JSONfn.stringify(this.params));
         // const paramsHash = JSONfn.stringify(select.params);
         // const paramsHash = JSON.stringify(select.params);
-        window.history.pushState('data',"title", '?o=' + paramsHash);
+        windowRef.history.pushState('data',"title", '?o=' + paramsHash);
     }
 
     get() {

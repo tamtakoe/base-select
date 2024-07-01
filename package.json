@@ -1,6 +1,6 @@
 {
   "name": "base-select",
-  "version": "0.0.3",
+  "version": "0.0.8",
   "description": "Powerful select component for web",
   "scripts": {
     "start": "webpack serve --open --mode=development",

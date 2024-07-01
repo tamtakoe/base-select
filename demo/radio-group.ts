@@ -7,6 +7,8 @@ interface RadioOptions {
     value?: any,
 }
 
+const documentRef = typeof document !== 'undefined' ? document : null
+
 export class RadioGroup {
     name: string;
     valueMap: any = {};
@@ -42,7 +44,7 @@ export class RadioGroup {
     createRadioElement(opt: RadioOptions = {}) {
         const valueHash = hashFnv32a(String(opt.value), true);
         const radioHtml =  `<label><input type="radio" name="${this.name}" value="${valueHash}" ${opt.checked ? 'checked=\"checked\"' : ''}/>${opt.label}</label>`;
-        const radioFragment = document.createElement('div');
+        const radioFragment = documentRef.createElement('div');
 
         this.valueMap[valueHash] = opt.value;
         radioFragment.innerHTML = radioHtml;

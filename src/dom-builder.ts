@@ -40,6 +40,7 @@ const CssClass = {
 
 const ADD_CLASS_METHOD_NAME = 'add';
 const REMOVE_CLASS_METHOD_NAME = 'remove';
+const documentRef = typeof document !== 'undefined' ? document : null
 
 export abstract class SelectDom {
     paramsDefault: any = {
@@ -143,17 +144,20 @@ export abstract class SelectDom {
     abstract inputFieldClick(): void;
 
     constructor(element: Element, style?: string | boolean) {
+        if (!documentRef) {
+            return
+        }
         let styleElement;
 
         // Include style to component dom (useful for web-component shadow dom)
         if (style) {
-            styleElement = document.createElement('style');
+            styleElement = documentRef.createElement('style');
 
             styleElement.innerHTML = String(style);
             element.before(styleElement);
         }
 
-        const containerElement = document.createElement('div');
+        const containerElement = documentRef.createElement('div');
 
         containerElement.innerHTML = String(template);
 
@@ -789,7 +793,7 @@ export abstract class SelectDom {
             setTimeout(() => {
                 if (!this.isOpen) return;
 
-                const nextListItemElement = getElementContainer(document.elementFromPoint((e as any).pageX, (e as any).pageY) as HTMLElement, this.tmpl.dropdownContainer, CssClass.listItem) || this.getFirstListElement();
+                const nextListItemElement = getElementContainer(documentRef.elementFromPoint((e as any).pageX, (e as any).pageY) as HTMLElement, this.tmpl.dropdownContainer, CssClass.listItem) || this.getFirstListElement();
 
                 if (nextListItemElement) {
                     this.setActiveListElement(nextListItemElement);

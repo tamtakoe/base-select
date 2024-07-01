@@ -8,20 +8,22 @@ const { values: args } = parseArgs({options: { mode: { type: 'string' }}, strict
 const isProduction = args.mode === 'production'
 
 module.exports = {
-   entry: {
+  entry: {
       'index':'./index.ts',
       'select': './src/select.ts',
       'select-base': './src/select.scss',
       'select-bootstrap': './src/select-bootstrap.scss',
       'select-material': './src/select-material.scss',
-   },
-   output: {
+  },
+  output: {
+      chunkLoading: false,
       filename: '[name].js',
       path: path.resolve(__dirname, "dist"),
       clean: true,
       library: {
         type: 'umd', // Exports as ES6-like module and as global variables
-      }
+      },
+      globalObject: 'this'
   },
   module: {
     rules: [

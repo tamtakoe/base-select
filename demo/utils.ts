@@ -5,6 +5,8 @@ export const originalItems = toArray(shopArr);
 
 export function noop() {}
 
+const windowRef = typeof window !== 'undefined' ? window : null
+
 function roundToEven(x: number) {
     return x % 2 ? x + 1 : x
 }
@@ -290,7 +292,7 @@ class JSONFN {
 export const JSONfn = new JSONFN();
 
 export function getUrlQueryValue(paramName: string) {
-    const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(windowRef.location.search);
     const value = urlParams.get(paramName);
     return value === 'false' ? false : (value === 'true' ? true : value);
 }

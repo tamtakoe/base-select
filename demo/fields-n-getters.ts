@@ -2,6 +2,8 @@ import template from './fields-n-getters.html';
 import {FnStorage} from './fn-storage'
 import {setEnabledDisabled, fnGroupToggleListener, JSONfn} from './utils';
 
+const documentRef = typeof document !== 'undefined' ? document : null
+
 export class FieldsAndGetters {
     elems: any = {};
     fnStorage: any;
@@ -271,7 +273,7 @@ export class FieldsAndGetters {
                 label: 'Example',
                 value: function () {
                     const _this = this;
-                    const customAreaElement = document.createElement('DIV');
+                    const customAreaElement = documentRef.createElement('DIV');
                     customAreaElement.innerHTML = '<input><button>Clothes</button><button>Shoes</button><button>Other</button>';
 
                     const customAreaBtnElements = customAreaElement.querySelectorAll('button');

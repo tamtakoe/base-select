@@ -3,6 +3,8 @@ import {CodeArea} from './code-area'
 import {RadioGroup} from './radio-group'
 import {showElement, hideElement, fnToStr, noop} from './utils';
 
+const documentRef = typeof document !== 'undefined' ? document : null
+
 export class FnStorage {
     elems: any = {};
     storage: any = {};
@@ -15,9 +17,9 @@ export class FnStorage {
     }
 
     createGroup(groupName: string, options: any, callback: Function) {
-        const groupElement: any = document.createElement('div');
-        const radioGroupElement = document.createElement('div');
-        const codeAreaElement = document.createElement('div');
+        const groupElement: any = documentRef.createElement('div');
+        const radioGroupElement = documentRef.createElement('div');
+        const codeAreaElement = documentRef.createElement('div');
 
         groupElement.style.height = codeAreaElement.style.height = 'inherit';
 

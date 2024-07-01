@@ -1,5 +1,8 @@
 import { myer } from './myer-array-diff';
 
+const documentRef = typeof document !== 'undefined' ? document : null
+const windowRef = typeof window !== 'undefined' ? window : null
+
 /**
  * Merge object by another one. Use default value if new value is undefined or null
  * @param obj
@@ -26,7 +29,7 @@ export function mergeWithDefaults(obj: any, newObj: any = {}, defaults: any = {}
  * @param {string} className
  * @returns {HTMLElement}
  */
-export function getElementContainer(element: HTMLElement, containerElement: HTMLElement = document.body, className?:string) {
+export function getElementContainer(element: HTMLElement, containerElement: HTMLElement = documentRef.body, className?:string) {
     while (element && element.classList && element.ownerDocument && element.nodeType !== 11 ) { // 11 - DOCUMENT_FRAGMENT_NODE
         if ((className && element.className.indexOf(className) >= 0) || (!className && element === containerElement)) { // current.classList.contains(className) doesn't work in IE9
             return element;
@@ -47,7 +50,7 @@ export function getElementContainer(element: HTMLElement, containerElement: HTML
 export function bindFocusBlur(element: HTMLElement, inputElement: HTMLElement, isolatedClass = 'isolated') {
     let isFocused = false, isMousedown = false, isBlur = false, shadowHost: any, parentNode: any = element.parentNode;
 
-    document.addEventListener('click', clickHandler, true);
+    documentRef.addEventListener('click', clickHandler, true);
     element.addEventListener('mousedown', mousedownHandler, true);
     element.addEventListener('blur', blurHandler, true);
     inputElement.addEventListener('focus', focusHandler, true);
@@ -130,7 +133,7 @@ export function bindFocusBlur(element: HTMLElement, inputElement: HTMLElement, i
         element: element,
         inputElement: inputElement,
         unbind: () => {
-            document.removeEventListener('click', clickHandler, true);
+            documentRef.removeEventListener('click', clickHandler, true);
             element.removeEventListener('mousedown', mousedownHandler, true);
             element.removeEventListener('blur', blurHandler, true);
             inputElement.removeEventListener('focus', focusHandler);
@@ -260,7 +263,7 @@ function getWidthOrHeight(elem: HTMLElement, name: any, extra: string) {
     // Start with offset property, which is equivalent to the border-box selectedItems
     let valueIsBorderBox = true,
         val: any = name === 'width' ? elem.offsetWidth : elem.offsetHeight,
-        styles: any = window.getComputedStyle(elem, null),
+        styles: any = windowRef.getComputedStyle(elem, null),
 
         //TODO Make isBorderBox after https://github.com/caitp/angular.js/commit/92bbb5e225253ebddd38ef5735d66ffef76b6a14 will be applied
         isBorderBox = false; //jQuery.support.boxSizing && jQuery.css( elem, "boxSizing", false, styles ) === "border-box";
@@ -302,8 +305,8 @@ function getWidthOrHeight(elem: HTMLElement, name: any, extra: string) {
  */
 export function hasNoSpaceBelowForMenu(toggleElement: HTMLElement, menuElement: HTMLElement, defaultMenuHeightPx = 100) {
     const spaceAbove = toggleElement.getBoundingClientRect().top;
-    const spaceBelow = window.innerHeight - toggleElement.getBoundingClientRect().bottom;
-    const maxMenuHeight = parseInt((window.getComputedStyle(menuElement) as any)['max-height']) || defaultMenuHeightPx;
+    const spaceBelow = windowRef.innerHeight - toggleElement.getBoundingClientRect().bottom;
+    const maxMenuHeight = parseInt((windowRef.getComputedStyle(menuElement) as any)['max-height']) || defaultMenuHeightPx;
 
     return spaceBelow < maxMenuHeight && spaceBelow < spaceAbove;
 }

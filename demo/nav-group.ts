@@ -7,6 +7,8 @@ interface NavOptions {
     url?: string,
 }
 
+const documentRef = typeof document !== 'undefined' ? document : null
+
 export class NavGroup {
     name: string;
     navElements: HTMLElement[] = [];
@@ -16,7 +18,7 @@ export class NavGroup {
         containerElement.innerHTML = String(template);
 
         const customizableNavFormElement: any = containerElement.querySelector('.customizable-nav-form');
-        const delimiterElement = document.createTextNode(' | ');
+        const delimiterElement = documentRef.createTextNode(' | ');
 
         this.navElements = options.map(option => this.createNavElement(option));
 
@@ -33,7 +35,7 @@ export class NavGroup {
 
     createNavElement(opt: NavOptions) {
         const navHtml =  opt.active ? `<b>${opt.title}</b>` : `<a href="${opt.url}">${opt.title}</a>`;
-        const containerFragment = document.createElement('div');
+        const containerFragment = documentRef.createElement('div');
 
         containerFragment.innerHTML = navHtml;
 
