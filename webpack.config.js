@@ -3,6 +3,7 @@ const { parseArgs } = require('util');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
+const DtsBundleWebpack = require('dts-bundle-webpack')
 const { values: args } = parseArgs({options: { mode: { type: 'string' }}, strict: false });
 const isProduction = args.mode === 'production'
 
@@ -63,13 +64,20 @@ module.exports = {
       events: {
         onEnd: {
           copy: [
-            { source: './dist/src/select.d.ts', destination: './dist/select.d.ts' },
+            { source: './dist/src/*.d.ts', destination: './dist/' },
             { source: './index-demo.html', destination: './dist/index.html' },
             { source: './index.css', destination: './dist/index.css' }
           ],
-          delete: [ './dist/demo', './dist/src', './dist/select-*.js' ]
+          delete: [ './dist/demo', './dist/src', './dist/select-*.js', './dist/index.d.ts' ]
         }
       }
+    }),
+    new DtsBundleWebpack({
+      name: 'select',
+      main: 'dist/**/*.d.ts',
+      out: 'select.d.ts',
+      removeSource: true,
+      outputAsModuleFolder: true
     })
   ] : [
     new HtmlWebpackPlugin({ // Serve index.html

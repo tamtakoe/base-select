@@ -1,5 +1,4 @@
 import style from './select.scss?module';
-// import bootstrapStyle from './select-bootstrap.scss';
 import { SelectDom } from './dom-builder';
 import {
     ascSort,

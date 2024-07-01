@@ -58,6 +58,7 @@ npm run build
 
 ## Publishing
 ```bash
+npm login
 npm publish
 ```
 

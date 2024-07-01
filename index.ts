@@ -8,22 +8,10 @@ import {EditAndCreate} from './demo/edit-n-create'
 import {Appearance} from './demo/appearance'
 import {ValueView} from './demo/value-view'
 import {SettingsView} from './demo/settings-view'
-
-// import { Select } from './dist/select'
 import { SelectWeb } from './src/select';
-
-// import * as bootstrapCss from './node_modules/bootstrap/dist/css/bootstrap.css';
-// import * as foundationCss from './node_modules/foundation-sites/dist/css/foundation.css';
-// import * as materialCss from './node_modules/materialize-css/dist/css/materialize.css';
-
-
-// import * as selectMaterialCss from './src/select-material.scss';
-// import * as selectBootstrapCss from './src/select-bootstrap.scss';
+// import { Select } from './dist/select'
 
 let loadedItems = originalItems;
-// const useShadowDom = false;//true;
-
-
 
 class StyleLinks {
     links: HTMLLinkElement[] = []
@@ -63,9 +51,6 @@ const styleFrameworkLinks = new StyleLinks(documentRef)
 documentRef.addEventListener("DOMContentLoaded", (e: Event) => {
     const isShadowDomProvided = !!documentRef.createElement('DIV').attachShadow;
     const useShadowDom = !!getUrlQueryValue('shadow-dom');
-
-    console.log('useShadowDom', useShadowDom)
-    // const useShadowDom = !documentRef.querySelector('[content="noShadowDom"]');
 
     let selectElement: any = documentRef.getElementById('select');
 
