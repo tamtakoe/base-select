@@ -1,0 +1,88 @@
+body {
+    padding: 20px;
+}
+td {
+    vertical-align: top;
+}
+.select-container {
+    padding: 5em;
+    vertical-align: middle;
+}
+.main {
+    width: 100%;
+    table-layout: fixed;
+}
+.main > tr > td {
+    width: 8.33%;
+    padding: 1em;
+}
+.fit-content {
+    width: fit-content;
+}
+.hide {
+    display: none;
+}
+.error {
+    outline: 1px solid red;
+}
+.float-right {
+    float: right;
+}
+.fields {
+    position: relative;
+}
+.fields label input {
+    width: 80px;
+    position: absolute;
+    right: 0;
+}
+.select-item {
+    cursor: pointer;
+    text-decoration: underline dotted;
+}
+.select-item.active {
+    font-weight: bold;
+}
+.unselectable {
+    user-select: none;
+}
+.radio-block label {
+    display: block;
+}
+.subtitle {
+    font-size: .8em;
+    font-weight: bold;
+}
+/* Code area */
+.highlight {
+     background-color: #f7f7f9;
+     padding: 0 0.5em;
+     overflow: auto;
+     height: inherit;
+     border: 0 solid #f7f7f9;
+     border-top-width: 5px;
+     border-bottom-width: 5px;
+}
+.highlight pre {
+    overflow: visible;
+    font-size: .8em;
+}
+.example-code {
+    position: relative;
+    height: inherit;
+    width: 100%;
+    margin-bottom: 0.5em;
+}
+.example-code textarea {
+    width: calc(100% - 0.7em);
+    height: calc(100% - 1em);
+    font-size: .8em;
+}
+.text-code-save-btn {
+    position: absolute;
+    padding: 0;
+    width: 18px;
+    height: 30px;
+    right: -8px;
+    top: 5px;
+}

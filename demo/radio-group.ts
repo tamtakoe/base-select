@@ -10,10 +10,10 @@ interface RadioOptions {
 export class RadioGroup {
     name: string;
     valueMap: any = {};
-    value;
-    radioElements = [];
+    value: any;
+    radioElements: HTMLInputElement[] = [];
 
-    constructor (containerElement, options: RadioOptions[], callback: Function = noop) {
+    constructor (containerElement: HTMLElement, options: RadioOptions[], callback: Function = noop) {
         this.name = randomId();
 
         containerElement.innerHTML = String(template);
@@ -50,7 +50,7 @@ export class RadioGroup {
         return radioFragment.firstChild;
     }
 
-    setValue(value) {
+    setValue(value: any) {
         if (value !== this.value) {
             const valueHash = Object.keys(this.valueMap).find(hash => this.valueMap[hash] === value);
             this.radioElements.forEach(radioElement => {

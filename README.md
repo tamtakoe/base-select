@@ -1,24 +1,66 @@
-# Base select component
+# BaseSelect component (WIP)
 
-> WORK IN PROGRESS!
+## Demo
 
-## Development
-### Run as web component. Limited by Chrome
+## Usage
+```bash
+npm install base-select
+```
+
+### As ES6 module
+```js
+import { Select, SelectWeb } from 'base-select'; // SelectWeb contains base styles in shadow dom
+
+const selectElement = document.getElementById('select');
+const selectParams = {
+    value: 'b',
+    items: ['a', 'b', 'c', 'd']
+};
+const select = new Select(selectElement, selectParams);
+
+selectElement.addEventListener('change', (e: any) => {
+    console.log('V', e.value);
+    updateValue(e.value);
+});
+```
+
+### As global variable
+```html
+<link href="base-select/select-base.css" rel="stylesheet"/> // If you don't use SelectWeb with included styles
+<link href="base-select/select-bootstrap.css" rel="stylesheet"/> // If you use Bootstrap
+<script src="base-select/select.js"></script>
+
+<div id="select"></div>
+<script>
+        const selectElement = document.getElementById('select');
+        const selectParams = {
+            value: 'b',
+            items: ['a', 'b', 'c', 'd']
+        };
+
+        new Select(selectElement, selectParams);
+</script>
+```
+
+### With css frameworks
+Use the `select-bootstrap.css`, `select-material.css` or `select-foundation.css` (TODO) for Bootstrap, Material etc. frameworks
+
+## Run development server
 ```bash
 npm start
 ```
 
-### Run without shadow dom in any browser
-```bash
-npm run start:noShadowDom
-```
-
-### Build
+## Build for production
 ```bash
 npm run build
 ```
 
-### TODO
+## Publishing
+```bash
+npm publish
+```
+
+## TODO
 File structure:
 ```
 demo
@@ -26,30 +68,13 @@ demo
  ├──appearance.html
  ...
  (sources for demo page)
-tests
- ├──test1.spec.js
- ...
 dist
- ├──dom-builder.d.ts
- ├──myer-array-diff.d.ts
- ├──utils.d.ts
  ├──select.d.ts
  ├──select.js
- ├──select.js.map
- ├──select.min.js
- ├──select.min.js.map
- ├──select.css
- ├──select.min.css
+ ├──select-base.css
  ├──select-bootstrap.css
- ├──select-bootstrap.min.css
- ├──select-foundation.css
- ├──select-foundation.min.css
- ├──select-material.scss
- ├──select-material.min.scss
- ├──select-web.js (shadow dom/ web component - base syles included)
- ├──select-web.js.map
- ├──select-web.min.js
- └──select-web.min.js.map
+ ├──select-foundation.css (TODO)
+ ├──select-material.css
 src
  ├──dom-builder.ts
  ├──myer-array-diff.ts
@@ -58,24 +83,15 @@ src
  ├──select.html
  ├──select.scss
  ├──select-bootstrap.scss
- ├──select-foundation.scss
+ ├──select-foundation.scss (TODO)
  └──select-material.scss
-index.html (demo page)
-index-bootstrap.html (fallbacks for browsers without shadow dom)
-index-foundation.html
-index-material.html
+index.html (demo page for dev server)
+index-demo.html (demo page)
+index-build.html (test page for builded module)
 index.ts (start point of demo page)
-index.js (compiled)
 package.json
 tsconfig.json
 README.md
 ...
 etc.
-```
-
-Commands:
-```
-npm start (local dev-server)
-npm run build
-npm run test
 ```

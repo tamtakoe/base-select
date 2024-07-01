@@ -7,7 +7,7 @@ export class CodeArea {
     isEditMode = false;
     options: any;
 
-    constructor (containerElement, options?: {isJson?:boolean, isFn?:boolean, hasSaveBtn?:boolean, successCallback?:Function, errorCallback?:Function}) {
+    constructor (containerElement: HTMLElement, options?: {isJson?:boolean, isFn?:boolean, hasSaveBtn?:boolean, successCallback?:Function, errorCallback?:Function}) {
         this.options = options = Object.assign({inputCallback: noop, errorCallback: noop}, options);
         containerElement.innerHTML = String(template);
 
@@ -21,7 +21,7 @@ export class CodeArea {
             const value = this.getValidValue(); // For validation
 
             if (value && !options.hasSaveBtn) {
-                options.successCallback(value);
+                this.options.successCallback(value);
             }
         });
 
@@ -29,7 +29,7 @@ export class CodeArea {
             const value = this.getValidValue();
 
             if (value && options.hasSaveBtn) {
-                options.successCallback(value);
+                this.options.successCallback(value);
             }
         })
     }

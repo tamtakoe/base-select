@@ -1,5 +1,5 @@
 import {LZString} from './demo/lz-string'
-import {originalItems, JSONfn} from './demo/utils'
+import {originalItems, JSONfn, getUrlQueryValue} from './demo/utils'
 import {ItemsGenerator} from './demo/items-generator'
 import {ValueGenerator} from './demo/value-generator'
 import {Options} from './demo/options'
@@ -9,18 +9,45 @@ import {Appearance} from './demo/appearance'
 import {ValueView} from './demo/value-view'
 import {SettingsView} from './demo/settings-view'
 
-import * as bootstrapCss from './node_modules/bootstrap/dist/css/bootstrap.css';
-import * as foundationCss from './node_modules/foundation-sites/dist/css/foundation.css';
-import * as materialCss from './node_modules/materialize-css/dist/css/materialize.css';
+// import { Select } from './dist/select'
+import { SelectWeb } from './src/select';
+
+// import * as bootstrapCss from './node_modules/bootstrap/dist/css/bootstrap.css';
+// import * as foundationCss from './node_modules/foundation-sites/dist/css/foundation.css';
+// import * as materialCss from './node_modules/materialize-css/dist/css/materialize.css';
 
 
-import * as selectMaterialCss from './src/select-material.scss';
-import * as selectBootstrapCss from './src/select-bootstrap.scss';
+// import * as selectMaterialCss from './src/select-material.scss';
+// import * as selectBootstrapCss from './src/select-bootstrap.scss';
 
 let loadedItems = originalItems;
 // const useShadowDom = false;//true;
 
-import { Select } from './src/select';
+
+
+class StyleLinks {
+    links: HTMLLinkElement[] = []
+
+    constructor(private documentRef: Document) {}
+
+    add(fileName: string) {
+        const link = document.createElement('link');
+    
+        link.href = fileName;
+        link.rel = 'stylesheet';
+        this.links.push(link)
+        this.documentRef.head.appendChild(link);
+    }
+
+    clear() {
+        this.links.forEach(link => link.remove())
+    }
+}
+const documentRef = document as any
+const styleBaseLinks = new StyleLinks(documentRef)
+const styleFrameworkLinks = new StyleLinks(documentRef)
+
+
 
 /* TODO
 - make styles for other frameworks (fix native and bootstrap styles)
@@ -33,30 +60,34 @@ import { Select } from './src/select';
 - set custom keys
  */
 
+documentRef.addEventListener("DOMContentLoaded", (e: Event) => {
+    const isShadowDomProvided = !!documentRef.createElement('DIV').attachShadow;
+    const useShadowDom = !!getUrlQueryValue('shadow-dom');
 
-document.addEventListener("DOMContentLoaded", (e) => {
-    const isShadowDomProvided = !!document.createElement('DIV').attachShadow;
-    const useShadowDom = !document.querySelector('[content="noShadowDom"]');
+    console.log('useShadowDom', useShadowDom)
+    // const useShadowDom = !documentRef.querySelector('[content="noShadowDom"]');
 
-    let selectElement: any = document.getElementById('select');
+    let selectElement: any = documentRef.getElementById('select');
 
-    const extraStyleBeforeElement = document.createElement('style');
-    const extraStyleAfterElement = document.createElement('style');
+    const extraStyleBeforeElement = documentRef.createElement('style');
+    const extraStyleAfterElement = documentRef.createElement('style');
 
     if (useShadowDom && isShadowDomProvided) {
-        const documentFragment = selectElement;
-        selectElement = document.createElement('div');
-        const htmlElement = document.createElement('html'); // We need html and body tags
-        const bodyElement = document.createElement('body'); // for correct local applying bootstrap.css and other css-frameworks.
+        const documentRefFragment = selectElement;
+        selectElement = documentRef.createElement('div');
+        const htmlElement = documentRef.createElement('html'); // We need html and body tags
+        const bodyElement = documentRef.createElement('body'); // for correct local applying bootstrap.css and other css-frameworks.
         bodyElement.style.margin = '0';
 
-        const documentFragmentRoot = documentFragment.attachShadow({mode: 'open'});
+        const documentRefFragmentRoot = documentRefFragment.attachShadow({mode: 'open'});
         bodyElement.appendChild(selectElement);
         htmlElement.appendChild(bodyElement);
-        documentFragmentRoot.appendChild(htmlElement);
+        documentRefFragmentRoot.appendChild(htmlElement);
 
         selectElement.before(extraStyleBeforeElement);
         selectElement.after(extraStyleAfterElement);
+    } else {
+        styleBaseLinks.add('select-base.css')
     }
 
     const defaultParams: any = {
@@ -100,7 +131,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
 
 
 
-    const select = new Select(selectElement, selectParams);
+    const select = new SelectWeb(selectElement, selectParams);
 
     selectElement.addEventListener('change', (e: any) => {
         console.log('V', e.value);
@@ -109,30 +140,30 @@ document.addEventListener("DOMContentLoaded", (e) => {
 
 
     // Create UI
-    const valueView = new ValueView(document.getElementById('value-view'));
-    const settingsView = new SettingsView(document.getElementById('settings-view'), select);
+    const valueView = new ValueView(documentRef.getElementById('value-view'));
+    const settingsView = new SettingsView(documentRef.getElementById('settings-view'), select);
 
     new ItemsGenerator(
-        document.getElementById('items-generator'),
+        documentRef.getElementById('items-generator'),
         originalItems,
         setParams,
-        (items) => loadedItems = items
+        (items: any) => loadedItems = items
     );
 
     new ValueGenerator(
-        document.getElementById('value-generator'),
+        documentRef.getElementById('value-generator'),
         setParams,
         () => selectParams.value || loadedItems,
         updateValue,
     );
 
     const optionsComponent = new Options(
-        document.getElementById('options'),
+        documentRef.getElementById('options'),
         setParams
     );
 
     const fieldsAndGettersComponent = new FieldsAndGetters(
-        document.getElementById('fields-n-getters'),
+        documentRef.getElementById('fields-n-getters'),
         setParams,
         // {
         //     valueFieldInput: 'id',
@@ -143,18 +174,18 @@ document.addEventListener("DOMContentLoaded", (e) => {
     );
 
     const editAndCreateComponent = new EditAndCreate(
-        document.getElementById('edit-n-create'),
+        documentRef.getElementById('edit-n-create'),
         setParams
     );
 
     new Appearance(
-        document.getElementById('appearance'),
+        documentRef.getElementById('appearance'),
         selectElement,
         setParams,
         setCssFramework
     );
 
-    function updateUI(params1, isFirstUpdate?) {
+    function updateUI(params1: any, isFirstUpdate = false) {
         const params = urlParamsStore.get()
         // params = paramsMask.removeDefaults(params);
         //console.log('U', params);
@@ -179,11 +210,11 @@ document.addEventListener("DOMContentLoaded", (e) => {
 
     updateValue(selectParams.value);
 
-    function updateValue(value) {
+    function updateValue(value: any) {
         valueView.setCode(JSON.stringify(value, null, 2));
     }
 
-    function setParams(params) {
+    function setParams(params: any) {
         if (isLoaded) {
             select.setParams(params);
             settingsView.update(params);
@@ -196,25 +227,22 @@ document.addEventListener("DOMContentLoaded", (e) => {
         }
     }
 
-    function setCssFramework(cssFrameworkKey) {
+    function setCssFramework(cssFrameworkKey: string) {
+        styleFrameworkLinks.clear()
         switch (cssFrameworkKey) {
             case 'bootstrap' :
-                extraStyleBeforeElement.innerHTML = String(bootstrapCss);
-                extraStyleAfterElement.innerHTML = String(selectBootstrapCss);
+                styleFrameworkLinks.add('https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css')
+                styleFrameworkLinks.add('select-bootstrap.css')
                 break;
-
             case 'foundation' :
-                extraStyleBeforeElement.innerHTML = String(foundationCss);
-                extraStyleAfterElement.innerHTML = '';
+                styleFrameworkLinks.add('https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/css/foundation.min.css')
                 break;
-
             case 'materialize' :
-                extraStyleBeforeElement.innerHTML = String(materialCss);
-                extraStyleAfterElement.innerHTML = String(selectMaterialCss);
+                styleFrameworkLinks.add('https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css')
+                styleFrameworkLinks.add('select-material.css')
                 break;
             default:
-                extraStyleBeforeElement.innerHTML = '';
-                extraStyleAfterElement.innerHTML = '';
+                break;
         }
     }
 });
@@ -222,23 +250,23 @@ document.addEventListener("DOMContentLoaded", (e) => {
 class UrlParamsStore {
     params;
 
-    constructor(defaultParams) {
-        let urlParams;
+    constructor(defaultParams: any) {
+        let urlParams: any;
         (window.onpopstate = () => {
-            let match,
+            let match: any,
                 pl     = /\+/g,  // Regex for replacing addition symbol with a space
                 search = /([^&=]+)=?([^&]*)/g,
-                decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+                decode = function (s: string) { return decodeURIComponent(s.replace(pl, " ")); },
                 query  = window.location.search.substring(1);
 
             urlParams = {};
             while (match = search.exec(query))
                 urlParams[decode(match[1])] = decode(match[2]);
         })();
-        this.params = JSONfn.parse(LZString.decompressFromEncodedURIComponent(urlParams.o) || null) || defaultParams;
+        this.params = JSONfn.parse(LZString.decompressFromEncodedURIComponent(urlParams.o) || '') || defaultParams;
     }
 
-    patch(params) {
+    patch(params: any) {
         this.params = Object.assign(this.params || {}, params);
         // debugger
         // const a = JSONfn

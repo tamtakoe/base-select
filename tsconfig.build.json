@@ -4,16 +4,11 @@
     "lib": ["es6", "dom"],
     "module": "esnext",
     "target": "es5",
-    "jsx": "react",
     "noImplicitAny": true,
-    "sourceMap": true,
-    "allowJs": true,
+    "declaration": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": false
   },
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"],
-  "include": ["src", "demo", "typings.d.ts", "index.ts"]
+  "files": ["index.ts", "src/select.ts", "typings.d.ts"]
 }

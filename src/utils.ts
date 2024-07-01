@@ -7,7 +7,7 @@ import { myer } from './myer-array-diff';
  * @param defaults
  * @returns {any}
  */
-export function mergeWithDefaults(obj, newObj = {}, defaults = {}) {
+export function mergeWithDefaults(obj: any, newObj: any = {}, defaults: any = {}) {
     for (let k in newObj) {
         const newValue = newObj[k];
 
@@ -45,7 +45,7 @@ export function getElementContainer(element: HTMLElement, containerElement: HTML
  * @returns {function} unbind function for listeners.
  */
 export function bindFocusBlur(element: HTMLElement, inputElement: HTMLElement, isolatedClass = 'isolated') {
-    let isFocused, isMousedown, isBlur, shadowHost, parentNode: any = element.parentNode;
+    let isFocused = false, isMousedown = false, isBlur = false, shadowHost: any, parentNode: any = element.parentNode;
 
     document.addEventListener('click', clickHandler, true);
     element.addEventListener('mousedown', mousedownHandler, true);
@@ -61,7 +61,7 @@ export function bindFocusBlur(element: HTMLElement, inputElement: HTMLElement, i
         parentNode = parentNode.parentNode;
     }
 
-    function blurHandler(event?) {
+    function blurHandler(event?: Event) {
         // console.log('+++ blurHandler', isMousedown);
         // if (event && event.target.nodeName !== 'INPUT') return; //for IE
         if (event && event.target !== inputElement) return; //for IE
@@ -96,11 +96,11 @@ export function bindFocusBlur(element: HTMLElement, inputElement: HTMLElement, i
         isMousedown = true;
     }
 
-    function clickHandler(event) {
-        console.log('+++ clickHandler', !!getElementContainer(event.target, element), event.target, event.target !== inputElement, event.target.nodeName);
+    function clickHandler(event: Event) {
+        console.log('+++ clickHandler', !!getElementContainer(event.target as HTMLElement, element), event.target, event.target !== inputElement, (event.target as any).nodeName);
         isMousedown = false;
 
-        const activeElement = shadowHost && event.target === shadowHost ? element : event.target;
+        const activeElement = shadowHost && event.target === shadowHost ? element : event.target as HTMLElement;
 
         const isIsolatedElement = !!getElementContainer(activeElement, element, isolatedClass); //TODO Make custom isolated class
 
@@ -166,7 +166,7 @@ export function bindFocusBlur(element: HTMLElement, inputElement: HTMLElement, i
  * @param {object} list
  * @param {object} item
  */
-export function scrollActiveOption(list, item) {
+export function scrollActiveOption(list: any, item: any) {
     let y, height_menu, height_item, scroll, scroll_top, scroll_bottom;
 
     if (item) {
@@ -190,7 +190,7 @@ export function scrollActiveOption(list, item) {
 const core_pnum = /[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/.source;
 const rnumnonpx = new RegExp("^(" + core_pnum + ")(?!px)[a-z%]+$", "i");
 
-function augmentWidthOrHeight(elem, name, extra, isBorderBox, styles) {
+function augmentWidthOrHeight(elem: HTMLElement, name: string, extra: string, isBorderBox: boolean, styles: string[]) {
     let i = extra === (isBorderBox ? 'border' : 'content') ?
         // If we already have the right measurement, avoid augmentation
         4 :
@@ -201,7 +201,7 @@ function augmentWidthOrHeight(elem, name, extra, isBorderBox, styles) {
         cssExpand = ['Top', 'Right', 'Bottom', 'Left'];
 
     //TODO Use angular.element.css instead of getStyleValue after https://github.com/caitp/angular.js/commit/92bbb5e225253ebddd38ef5735d66ffef76b6a14 will be applied
-    function getStyleValue(name) {
+    function getStyleValue(name: any) {
         return parseFloat(styles[name]);
     }
 
@@ -234,7 +234,7 @@ function augmentWidthOrHeight(elem, name, extra, isBorderBox, styles) {
     return val;
 }
 
-function getOffset(elem) {
+function getOffset(elem: HTMLElement) {
     let docElem, win,
         box = elem.getBoundingClientRect(),
         doc = elem && elem.ownerDocument;
@@ -252,15 +252,15 @@ function getOffset(elem) {
     };
 }
 
-function getWindow(elem) {
-    return elem != null && elem === elem.window ? elem : elem.nodeType === 9 && elem.defaultView;
+function getWindow(elem: Document) {
+    return elem != null && elem === (elem as any).window ? elem : elem.nodeType === 9 && (elem as any).defaultView;
 }
 
-function getWidthOrHeight(elem, name, extra) {
+function getWidthOrHeight(elem: HTMLElement, name: any, extra: string) {
     // Start with offset property, which is equivalent to the border-box selectedItems
     let valueIsBorderBox = true,
-        val = name === 'width' ? elem.offsetWidth : elem.offsetHeight,
-        styles = window.getComputedStyle(elem, null),
+        val: any = name === 'width' ? elem.offsetWidth : elem.offsetHeight,
+        styles: any = window.getComputedStyle(elem, null),
 
         //TODO Make isBorderBox after https://github.com/caitp/angular.js/commit/92bbb5e225253ebddd38ef5735d66ffef76b6a14 will be applied
         isBorderBox = false; //jQuery.support.boxSizing && jQuery.css( elem, "boxSizing", false, styles ) === "border-box";
@@ -300,15 +300,15 @@ function getWidthOrHeight(elem, name, extra) {
  * @param defaultMenuHeightPx
  * @returns {boolean}
  */
-export function hasNoSpaceBelowForMenu(toggleElement, menuElement, defaultMenuHeightPx = 100) {
+export function hasNoSpaceBelowForMenu(toggleElement: HTMLElement, menuElement: HTMLElement, defaultMenuHeightPx = 100) {
     const spaceAbove = toggleElement.getBoundingClientRect().top;
     const spaceBelow = window.innerHeight - toggleElement.getBoundingClientRect().bottom;
-    const maxMenuHeight = parseInt(window.getComputedStyle(menuElement)['max-height']) || defaultMenuHeightPx;
+    const maxMenuHeight = parseInt((window.getComputedStyle(menuElement) as any)['max-height']) || defaultMenuHeightPx;
 
     return spaceBelow < maxMenuHeight && spaceBelow < spaceAbove;
 }
 
-export function groupsIsEmpty(groups) {
+export function groupsIsEmpty(groups: any) {
     for (let k in groups) {
         if (groups.hasOwnProperty(k) && groups[k].length) {
             return false;
@@ -353,7 +353,7 @@ export function intersection(xArr: any[], yArr: any[], getter?: Function, invert
  * @param {boolean} strict
  * @returns {any}
  */
-function deepEqual(actual, expected, strict = true) {
+function deepEqual(actual: any, expected: any, strict = true) {
     if (actual === expected) {
         return true;
 
@@ -376,7 +376,7 @@ function deepEqual(actual, expected, strict = true) {
  * @param strict
  * @returns {boolean}
  */
-function objEqual(a, b, strict) {
+function objEqual(a: any, b: any, strict: boolean) {
     let i, key;
 
     if (a == null || b == null) {
@@ -414,7 +414,7 @@ function objEqual(a, b, strict) {
     }
 }
 
-function toString(value) {
+function toString(value: any) {
     return String(value !== void 0 ? value : '');
 }
 
@@ -451,7 +451,7 @@ export function ascSort(items: any, query: any, getLabel: Function, options: {fi
     let getLabelArr: any[] = [getLabel];
 
     if (options.fields) {
-        getLabelArr = options.fields.map(field => typeof field === 'function' ? field : item => deepFind(item, field, true))
+        getLabelArr = options.fields.map(field => typeof field === 'function' ? field : (item: any) => deepFind(item, field, true))
     }
 
     getLabel = getLabelArr[0];
@@ -520,8 +520,8 @@ export function ascSort(items: any, query: any, getLabel: Function, options: {fi
  * @param {(option) => string} groupNameGetter
  * @returns {{: Array}}
  */
-export function distributeOptionsByGroup(options = [], groupNameGetter = (item) => '') {
-    let optionGroups = {'':[]},
+export function distributeOptionsByGroup(options: any[] = [], groupNameGetter = (item: any) => '') {
+    let optionGroups: any = {'':[]},
         optionGroupName,
         optionGroup;
 
@@ -537,7 +537,7 @@ export function distributeOptionsByGroup(options = [], groupNameGetter = (item) 
     return optionGroups;
 }
 
-export function findIndex(items = [], item, trackByGetter = (item) => item) {
+export function findIndex(items: any[] = [], item: any, trackByGetter = (item: any) => item) {
     for (let i = 0; i < items.length; i++) {
         if (trackByGetter(items[i]) === trackByGetter(item)) {
             return i;
@@ -545,7 +545,7 @@ export function findIndex(items = [], item, trackByGetter = (item) => item) {
     }
 }
 
-export function removeChildren(element) {
+export function removeChildren(element: HTMLElement) {
     while (element.firstChild) {
         element.removeChild(element.firstChild);
     }
@@ -555,21 +555,21 @@ export function removeChildren(element) {
  *
  * @param {HTMLElement} containerElement
  * @param {any[]} newItems
- * @param {(item) => Element} elementConstructor
+ * @param {(item) => HTMLElement} elementConstructor
  * @param {Function} trackFieldGetter
  * @param {boolean} appendUndefinedItems - place undefined items to the end of list (they prepend by default)
  * @returns {HTMLElement} containerElement with changes
  */
-export function updateElements(containerElement: HTMLElement, newItems: any[], elementConstructor: (item) => Element, trackFieldGetter?: Function, appendUndefinedItems?: boolean) {
+export function updateElements(containerElement: HTMLElement, newItems: any[], elementConstructor: (item: any) => Element, trackFieldGetter?: Function, appendUndefinedItems?: boolean) {
     const elementsArr = Array.from(containerElement.children);
-    const track = (item) => {
+    const track = (item: any) => {
         const id = item !== undefined && (trackFieldGetter ? trackFieldGetter(item) : item);
 
         if (id || id === 0) return id;
     };
     const uncountableElementId = new Error('Uncountable element'); // We use this id for interface (no data) elements
-    let newItemIds,
-        itemsMap,
+    let newItemIds: any[],
+        itemsMap: any,
         oldItemIds;
 
     if (trackFieldGetter) {
@@ -598,14 +598,14 @@ export function updateElements(containerElement: HTMLElement, newItems: any[], e
     });
 
     const instructions = myer.diff(oldItemIds, newItemIds);
-    const operations = instructions.map(args => { //convert id to element for insert operations
+    const operations = instructions.map((args: any) => { //convert id to element for insert operations
         if (args.hasOwnProperty(2)) { //if we have ids for new elements
-            return args.map((arg, i) => i < 2 ? arg : elementConstructor(itemsMap ? itemsMap.get(arg) : arg));
+            return args.map((arg: any, i: number) => i < 2 ? arg : elementConstructor(itemsMap ? itemsMap.get(arg) : arg));
         }
         return args;
     });
 
-    operations.forEach(operation => {
+    operations.forEach((operation: any) => {
         if (operation.hasOwnProperty(1)) {
             removeElements(containerElement, operation[0], operation[1]);
         }
@@ -618,7 +618,7 @@ export function updateElements(containerElement: HTMLElement, newItems: any[], e
     return containerElement;
 }
 
-function removeElements(containerElement, startIndex, amount) {
+function removeElements(containerElement: HTMLElement, startIndex: number, amount: number) {
     const children = containerElement.children;
 
     for (let i = 0; i < amount; i++) {
@@ -626,7 +626,7 @@ function removeElements(containerElement, startIndex, amount) {
     }
 }
 
-function addElements(containerElement, startIndex, newElements) {
+function addElements(containerElement: HTMLElement, startIndex: number, newElements: HTMLElement[]) {
     const children = containerElement.children;
 
     if (startIndex) {
@@ -644,8 +644,8 @@ function addElements(containerElement, startIndex, newElements) {
  * @param {Object} object
  * @returns {{} & Object}
  */
-export function deepReplace(oldVal: any, newVal: any, object: object) {
-    const newObject = copy(object);
+export function deepReplace(oldVal: any, newVal: any, object: any) {
+    const newObject: any = copy(object);
 
     Object.keys(object).forEach(key => {
         const val = object[key];
@@ -667,8 +667,8 @@ export function deepReplace(oldVal: any, newVal: any, object: object) {
  * @param {Object} obj
  * @returns {Array | {}}
  */
-function copy(obj: object) {
-    const clone = {};
+function copy(obj: any) {
+    const clone: any = {};
 
     for(let i in obj) {
         if (obj[i] != null && typeof obj[i] === 'object') {
@@ -738,12 +738,12 @@ export function highlight(str: string = '', substr: string = '', tagName?: strin
  * @param timeout
  * @returns {(e) => any}
  */
-export function debounceEventValue(fn, timeout) {
-    let timer = null;
+export function debounceEventValue(fn: Function, timeout: number) {
+    let timer: ReturnType<typeof setTimeout> = null;
 
-    return function (e) {
+    return function (e: Event) {
         // Save `e.target.value` to value because `e` will be changed in shadow-dom case
-        const value = e.target.value;
+        const value = (e.target as any).value;
         const onComplete = () => {
             fn.call(this, value);
             timer = null;
@@ -761,13 +761,13 @@ export function debounceEventValue(fn, timeout) {
 export function getItemsByField(fields: any, items: any[], fieldGetter: Function) {
     fields = Array.isArray(fields) ? fields : [fields];
 
-    return fields.map(field => {
+    return fields.map((field: string) => {
         return items.find(item => fieldGetter(item) === field);
-    }).filter(item => item);
+    }).filter((item: any) => item);
 }
 
-export const noopPipe = (item?) => item;
-export const noop = (item?) => {};
+export const noopPipe = (item?: any) => item;
+export const noop = (item?: any) => {};
 
 
 /**
@@ -795,7 +795,7 @@ export class QueryCache {
         this.cache = [];
     }
 
-    private getValue(cacheItem) {
+    private getValue(cacheItem: any) {
         if (cacheItem) {
             return cacheItem.v;
         }

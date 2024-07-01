@@ -4,9 +4,9 @@ import {setEnabledDisabled, fnGroupToggleListener, JSONfn} from './utils';
 
 export class FieldsAndGetters {
     elems: any = {};
-    fnStorage;
+    fnStorage: any;
     
-    constructor (containerElement, setParams, lastValues: any = {}) {
+    constructor (containerElement: HTMLElement, setParams: Function, lastValues: any = {}) {
         containerElement.innerHTML = String(template);
 
         // Fields
@@ -76,39 +76,39 @@ export class FieldsAndGetters {
             });
         });
 
-        this.elems.valueFieldInputElement.addEventListener('input', (e) => {
+        this.elems.valueFieldInputElement.addEventListener('input', (e: Event) => {
             setParams({
-                valueField: e.target.value
+                valueField: (e.target as any).value
             });
         });
-        this.elems.groupFieldInputElement.addEventListener('input', (e) => {
+        this.elems.groupFieldInputElement.addEventListener('input', (e: Event) => {
             setParams({
-                groupField: e.target.value
+                groupField: (e.target as any).value
             });
         });
-        this.elems.searchFieldInputElement.addEventListener('input', (e) => {
+        this.elems.searchFieldInputElement.addEventListener('input', (e: Event) => {
             setParams({
-                searchField: e.target.value
+                searchField: (e.target as any).value
             });
         });
-        this.elems.trackFieldInputElement.addEventListener('input', (e) => {
+        this.elems.trackFieldInputElement.addEventListener('input', (e: Event) => {
             setParams({
-                trackField: e.target.value
+                trackField: (e.target as any).value
             });
         });
-        this.elems.disabledFieldInputElement.addEventListener('input', (e) => {
+        this.elems.disabledFieldInputElement.addEventListener('input', (e: Event) => {
             setParams({
-                disabledField: e.target.value
+                disabledField: (e.target as any).value
             });
         });
-        this.elems.selectedItemLabelFieldInputElement.addEventListener('input', (e) => {
+        this.elems.selectedItemLabelFieldInputElement.addEventListener('input', (e: Event) => {
             setParams({
-                selectionLabelField: e.target.value
+                selectionLabelField: (e.target as any).value
             });
         });
-        this.elems.dropdownItemLabelFieldInputElement.addEventListener('input', (e) => {
+        this.elems.dropdownItemLabelFieldInputElement.addEventListener('input', (e: Event) => {
             setParams({
-                itemLabelField:  e.target.value
+                itemLabelField:  (e.target as any).value
             });
         });
 
@@ -149,7 +149,7 @@ export class FieldsAndGetters {
                 checked: true
             }, {
                 label: 'Example',
-                value: function (item) {
+                value: function (item: any) {
                     return item.name
                 }
             }, {
@@ -165,7 +165,7 @@ export class FieldsAndGetters {
                 checked: true
             }, {
                 label: 'Example',
-                value: function (item) {
+                value: function (item: any) {
                     return item.id
                 }
             }, {
@@ -181,7 +181,7 @@ export class FieldsAndGetters {
                 checked: true
             }, {
                 label: 'Example',
-                value: function (item) {
+                value: function (item: any) {
                     return item.id
                 }
             }, {
@@ -197,7 +197,7 @@ export class FieldsAndGetters {
                 checked: true
             }, {
                 label: 'Example',
-                value: function (item) {
+                value: function (item: any) {
                     return item.name
                 }
             }, {
@@ -213,7 +213,7 @@ export class FieldsAndGetters {
                 checked: true
             }, {
                 label: 'Example',
-                value: function (item) {
+                value: function (item: any) {
                     return item.id % 2
                 }
             }, {
@@ -229,7 +229,7 @@ export class FieldsAndGetters {
                 checked: true
             }, {
                 label: 'Example',
-                value: function (item) {
+                value: function (item: any) {
                     return `<i>${item.name}</i>`
                 }
             }, {
@@ -245,7 +245,7 @@ export class FieldsAndGetters {
                 checked: true
             }, {
                 label: 'Example',
-                value: function (item) {
+                value: function (item: any) {
                     return `<span style="color: red">${item.name}</span>`
                 }
             }, {
@@ -257,7 +257,7 @@ export class FieldsAndGetters {
                 checked: true
             }, {
                 label: 'Example',
-                value: function (label) {
+                value: function (label: string) {
                     return `<i>${label}</i>`
                 }
             }, {
@@ -278,7 +278,7 @@ export class FieldsAndGetters {
                     const customAreaClothesBtnElement = customAreaBtnElements[0];
                     const customAreaShoesBtnElement = customAreaBtnElements[1];
                     const customAreaOtherBtnElement = customAreaBtnElements[2];
-                    const customAreaInputElement = customAreaElement.querySelector('input');
+                    const customAreaInputElement = customAreaElement.querySelector('input')!;
 
                     customAreaClothesBtnElement.addEventListener('click', (e: any) => {
                         _this.searchChange({query: 'clothes', fields: ['category']});
@@ -309,13 +309,13 @@ export class FieldsAndGetters {
                 checked: true
             }, {
                 label: 'Example',
-                value: function (hiddenItemsNumber) {
+                value: function (hiddenItemsNumber: number) {
                     return hiddenItemsNumber > 0 ? `and ${hiddenItemsNumber} more`: ''
                 }
             }, {
                 label: 'Custom'
             }],
-        }, (changedParams, options) => {
+        }, (changedParams: any, options: any) => {
             const isDefault = String(options.label).toLowerCase() === 'default';
 
             switch (options.groupName) {
@@ -356,7 +356,7 @@ export class FieldsAndGetters {
             }
         });
 
-        const createGroupToggleListener = (field) => fnGroupToggleListener.bind(this, this.elems.fieldsAndGettersFnGroupElement, this.fnStorage, field);
+        const createGroupToggleListener = (field: string) => fnGroupToggleListener.bind(this, this.elems.fieldsAndGettersFnGroupElement, this.fnStorage, field);
 
         this.elems.valueFieldGetterLabelElement.addEventListener('click', createGroupToggleListener('valueFieldGetter'));
         this.elems.groupFieldGetterLabelElement.addEventListener('click', createGroupToggleListener('groupFieldGetter'));
@@ -370,7 +370,7 @@ export class FieldsAndGetters {
         this.elems.inputInfoGetterLabelElement.addEventListener('click', createGroupToggleListener('infoGetter'));
     }
 
-    set(params) {
+    set(params: any) {
         // Fields
         this.elems.valueFieldCheckboxElement.checked             = !!params.valueField;
         this.elems.groupFieldCheckboxElement.checked             = !!params.groupField;

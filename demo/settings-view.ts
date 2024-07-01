@@ -6,26 +6,26 @@ import {fnToStr, hashFnv32a} from './utils'
 export class SettingsView extends CodeArea {
     isLast: boolean = false;
     select;
-    log = [];
+    log: string[] = [];
 
-    constructor(containerElement, select) {
+    constructor(containerElement: HTMLElement, select: any) {
         super(containerElement); // "A 'super' call must be the first statement in the constructor" hack
 
         this.select = select;
         containerElement.innerHTML = String(template);
 
-        const codeAreaElement: any = containerElement.querySelector('.settings-view-toggle');
+        const codeAreaElement: HTMLElement = containerElement.querySelector('.settings-view-toggle')!;
 
         super(codeAreaElement);
 
-        new RadioGroup(containerElement.querySelector('.settings-code-area'), [{
+        new RadioGroup(containerElement.querySelector('.settings-code-area')!, [{
             label: 'Last',
             value: 'last',
             checked: true
         }, {
             label: 'All',
             value: 'all'
-        }], (value) => {
+        }], (value: string) => {
             this.isLast = false;
 
             switch (value) {
@@ -41,7 +41,7 @@ export class SettingsView extends CodeArea {
         });
     }
 
-    update(params) {
+    update(params: any) {
         if (this.isLast) {
             this.log.unshift(this.makeBeautiful(params));
             this.showLog();
@@ -58,7 +58,7 @@ export class SettingsView extends CodeArea {
         this.setCode(this.makeBeautiful(this.select.params));
     }
 
-    makeBeautiful(params, space = 2) {
+    makeBeautiful(params: any, space = 2) {
         const spaceStr = '          ';
         const fnsHash: any = {};
         const readableSelectParams: any = Object.assign({}, params);

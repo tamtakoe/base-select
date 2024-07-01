@@ -5,9 +5,9 @@ import {FnStorage} from './fn-storage'
 
 export class EditAndCreate {
     elems: any = {};
-    fnStorage;
+    fnStorage: any;
     
-    constructor(containerElement, setParams, lastValues: any = {}) {
+    constructor(containerElement: HTMLElement, setParams: any, lastValues: any = {}) {
         containerElement.innerHTML = String(template);
 
         this.elems.editableCheckboxElement = containerElement.querySelector('#editableCheckbox');
@@ -32,7 +32,7 @@ export class EditAndCreate {
                 checked: true
             }, {
                 label: 'Example',
-                value: function (value) {
+                value: function (value: any) {
                     this.setPlaceholder(value)
                 }
             }, {
@@ -44,7 +44,7 @@ export class EditAndCreate {
                 checked: true
             }, {
                 label: 'Example',
-                value: function (query) {
+                value: function (query: string) {
                     const _this = this;
 
                     _this.counter = _this.counter || 100;
@@ -69,7 +69,7 @@ export class EditAndCreate {
                 checked: true
             }, {
                 label: 'Example',
-                value: function (item) {
+                value: function (item: any) {
                     return new Promise(resolve => {
                         setTimeout(() => {
                             resolve(`${item.name} removed`)
@@ -79,7 +79,7 @@ export class EditAndCreate {
             }, {
                 label: 'Custom'
             }]
-        }, (changedParams, options) => {
+        }, (changedParams: Function, options: any) => {
             const isDefault = String(options.label).toLowerCase() === 'default';
 
             switch (options.groupName) {
@@ -100,7 +100,7 @@ export class EditAndCreate {
             }
         });
 
-        const createGroupToggleListener = (field) => fnGroupToggleListener.bind(this, this.elems.editAndCreateFnGroupElement, this.fnStorage, field);
+        const createGroupToggleListener = (field: string) => fnGroupToggleListener.bind(this, this.elems.editAndCreateFnGroupElement, this.fnStorage, field);
 
         this.elems.editItemFnLabelElement.addEventListener('click', createGroupToggleListener('editItemFn'));
         this.elems.editableCheckboxElement.addEventListener('change', (e: any) => {
@@ -124,7 +124,7 @@ export class EditAndCreate {
         });
     }
 
-    set(params, updateGetters?) {
+    set(params: any, updateGetters?: boolean) {
         // Flags
         this.elems.editableCheckboxElement.checked  = params.editable;
         this.elems.creatableCheckboxElement.checked = params.creatable;

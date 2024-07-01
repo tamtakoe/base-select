@@ -1,36 +1,10 @@
 {
   "name": "base-select",
-  "version": "0.0.1",
-  "description": "Extended select component for web",
-  "license": "MIT",
+  "version": "0.0.2",
+  "description": "Powerful select component for web",
   "scripts": {
-    "start": "webpack-dev-server --config webpack.config.js --progress --profile --watch --open",
-    "start:noShadowDom": "webpack-dev-server --config webpack.config.js --progress --profile --watch --open --noShadowDom",
-    "build": "rimraf dist/* && webpack --config webpack.build.config.js --mode production",
-    "build:dev": "rimraf dist/* && webpack --mode production",
-    "build:old": "rimraf dist/* && tsc -p tsconfig.dist.json"
-  },
-  "devDependencies": {
-    "awesome-typescript-loader": "^5.2.1",
-    "bootstrap": "^4.3.1",
-    "copy-webpack-plugin": "^5.0.4",
-    "css-loader": "^3.2.0",
-    "file-loader": "^4.2.0",
-    "foundation-sites": "^6.5.3",
-    "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
-    "json-loader": "^0.5.7",
-    "materialize-css": "^1.0.0",
-    "node-sass": "^4.12.0",
-    "resolve-url-loader": "^3.1.0",
-    "rimraf": "^3.0.0",
-    "sass-loader": "^7.3.1",
-    "style-loader": "^1.0.0",
-    "typescript": "^3.5.3",
-    "url-loader": "^2.1.0",
-    "webpack": "^4.39.2",
-    "webpack-cli": "^3.3.7",
-    "webpack-dev-server": "^3.8.0"
+    "start": "webpack serve --open --mode=development",
+    "build": "webpack --mode=production"
   },
   "main": "./dist/select.js",
   "types": "./dist/select.d.ts",
@@ -38,13 +12,21 @@
     "type": "git",
     "url": "https://github.com/tamtakoe/base-select"
   },
-  "engines": {
-    "node": ">= 12.0.0 < 14.0.0",
-    "npm": ">= 5"
-  },
-  "dependencies": {
-    "extract-text-webpack-plugin": "^3.0.2",
-    "mini-css-extract-plugin": "^0.8.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.3"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "css-loader": "^7.1.2",
+    "filemanager-webpack-plugin": "^8.0.0",
+    "html-loader": "^5.0.0",
+    "html-webpack-plugin": "^5.6.0",
+    "mini-css-extract-plugin": "^2.9.0",
+    "sass": "^1.77.6",
+    "sass-loader": "^14.2.1",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.2",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4"
   }
 }

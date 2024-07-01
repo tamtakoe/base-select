@@ -1,9 +1,6 @@
-import * as style from './select.scss';
-import * as bootstrapStyle from './select-bootstrap.scss';
-
-// import './select.scss';
+import style from './select.scss?module';
+// import bootstrapStyle from './select-bootstrap.scss';
 import { SelectDom } from './dom-builder';
-// let style;
 import {
     ascSort,
     findIndex,
@@ -18,14 +15,12 @@ import {
 const QUERY_PLACEHOLDER = '$query';
 
 export class Select extends SelectDom {
-
-    value;
+    value: any;
     private cache = new QueryCache();
     loadItemsPromise: Promise<any>; //Just for case. We don't use it now
 
-    constructor(element, params: any = {}) {
-        super(element, params.localStyle ? (params.localStyle === true ? String(style) : params.localStyle) : null);
-
+    constructor(element: HTMLElement, params: any = {}) {
+        super(element, params.localStyle);
         this.setParams(params);
     }
 
@@ -35,8 +30,8 @@ export class Select extends SelectDom {
         console.log('setParams', params);
         mergeWithDefaults(this.params, params, this.paramsDefault);
 
-        const hasProperty = (property) => params.hasOwnProperty(property);
-        const hasFalsyProperty = (property) => params.hasOwnProperty(property) && !params[property];
+        const hasProperty = (property: string) => params.hasOwnProperty(property);
+        const hasFalsyProperty = (property: string) => params.hasOwnProperty(property) && !params[property];
 
         // Complex
         if (hasProperty('removable')) {
@@ -85,23 +80,23 @@ export class Select extends SelectDom {
 
         // Field & Getters
         if (hasFalsyProperty('valueFieldGetter') && this.params.valueField || hasProperty('valueField')) { // Id or other unique value
-            this.params.valueFieldGetter = (item) => deepFind(item, this.params.valueField, true);
+            this.params.valueFieldGetter = (item: any) => deepFind(item, this.params.valueField, true);
         }
 
         if (hasFalsyProperty('groupFieldGetter') && this.params.groupField || hasProperty('groupField')) { // Group id
-            this.params.groupFieldGetter = (item) => deepFind(item, this.params.groupField)
+            this.params.groupFieldGetter = (item: any) => deepFind(item, this.params.groupField)
         }
 
         if (hasFalsyProperty('searchFieldGetter') && this.params.searchField || hasProperty('searchField')) { // Field for searching
-            this.params.searchFieldGetter = (item) => deepFind(item, this.params.searchField, true);
+            this.params.searchFieldGetter = (item: any) => deepFind(item, this.params.searchField, true);
         }
 
         if (hasFalsyProperty('trackFieldGetter') && (this.params.trackField || this.params.valueField) || hasProperty('trackField') || hasProperty('valueField')) { // Track id
-            this.params.trackFieldGetter = (item) => deepFind(item, this.params.trackField || this.params.valueField, true);
+            this.params.trackFieldGetter = (item: any) => deepFind(item, this.params.trackField || this.params.valueField, true);
         }
 
         if (hasFalsyProperty('disabledFieldGetter') && this.params.disabledField || hasProperty('disabledField')) { // Field with disabled flag
-            this.params.disabledFieldGetter = (item) => deepFind(item, this.params.disabledField);
+            this.params.disabledFieldGetter = (item: any) => deepFind(item, this.params.disabledField);
         }
 
         // if (hasProperty('groupField') && !params.groupLabelGetter) {
@@ -109,11 +104,11 @@ export class Select extends SelectDom {
         // }
 
         if (hasFalsyProperty('dropdownItemLabelGetter') && (this.params.dropdownItemLabelField || this.params.searchField) || !params.dropdownItemLabelGetter && (hasProperty('dropdownItemLabelField') || hasProperty('searchField'))) {
-            this.params.dropdownItemLabelGetter = (item, query) => highlight(deepFind(item, this.params.dropdownItemLabelField || this.params.searchField, true), query);
+            this.params.dropdownItemLabelGetter = (item: any, query: any) => highlight(deepFind(item, this.params.dropdownItemLabelField || this.params.searchField, true), query);
         }
 
         if (hasFalsyProperty('selectedItemLabelGetter') && (this.params.selectedItemLabelField || this.params.searchField) || !params.selectedItemLabelGetter && (hasProperty('selectedItemLabelField') || hasProperty('searchField'))) {
-            this.params.selectedItemLabelGetter = (item) => deepFind(item, this.params.selectedItemLabelField || this.params.searchField, true)
+            this.params.selectedItemLabelGetter = (item: any) => deepFind(item, this.params.selectedItemLabelField || this.params.searchField, true)
         }
 
         if (hasProperty('placeholder') && !hasProperty('multiplePlaceholder')) {
@@ -121,23 +116,23 @@ export class Select extends SelectDom {
         }
 
         if (params.creatable && !params.createItemFn) {
-            this.params.createItemFn = typeof params.creatable === 'object' ? (query) => deepReplace(QUERY_PLACEHOLDER, query, params.creatable) : (query) => query;
+            this.params.createItemFn = typeof params.creatable === 'object' ? (query: any) => deepReplace(QUERY_PLACEHOLDER, query, params.creatable) : (query: any) => query;
         }
 
         if (this.params.editable && !params.editItemFn) {
-            this.params.editItemFn = (value) => this.setQuery(value, true);
+            this.params.editItemFn = (value: any) => this.setQuery(value, true);
         }
 
         if (!this.params.getItemsByValue) {
             // Find items by value in the items list
-            this.params.getItemsByValue = (values) => {
+            this.params.getItemsByValue = (values: any[]) => {
                 return this.loadListItems()
                     .then(items => getItemsByField(values, items, this.params.valueFieldGetter));
             }
         }
 
         if (hasProperty('items')) {
-            this.params.getItems = (query) => {
+            this.params.getItems = (query: any) => {
                 let options;
 
                 if (typeof query === 'object' && query.hasOwnProperty('query')) {
@@ -285,7 +280,7 @@ export class Select extends SelectDom {
         return this.loadItemsPromise;
     }
 
-    updateDropdownListItems(query?) {
+    updateDropdownListItems(query?: string) {
         // console.log('query', query);
         return this.loadListItems(query)
             .then((items) => {
@@ -306,9 +301,9 @@ export class Select extends SelectDom {
         // })
     }
 
-    saveOn(key) {
+    saveOn(key: string) {
         if (this.activeListElement) {
-            const parentNode = this.activeListElement.parentNode;
+            const parentNode = this.activeListElement.parentNode as HTMLElement;
 
             this.selectItem(this.activeListElement); //FIXME. This is bug. case: keepOpen + remove all
             this.setNextActiveListElement(null, parentNode);
@@ -357,7 +352,7 @@ export class Select extends SelectDom {
     }
 
     // Item manipulations
-    public selectItems(items) {
+    public selectItems(items: any[]) {
         // console.log('selectItems []', items);
         // if (!this.params.multiple && !items) {
         //   this.deselectAllItems();
@@ -378,10 +373,10 @@ export class Select extends SelectDom {
             });
     }
 
-    public selectItem(listItemElement, isNewItem?: boolean) {
+    public selectItem(listItemElement: HTMLElement, isNewItem?: boolean) {
         // if (this.isElementDisabled(listItemElement)) return; //Should works without it
 
-        const item = listItemElement.data;
+        const item = (listItemElement as any).data;
 
         // Multiple limit
         if (this.params.multipleLimit >= 0 && this.selectedItems.length >= this.params.multipleLimit) {
@@ -442,7 +437,7 @@ export class Select extends SelectDom {
         this.updateValue();
     }
 
-    public deselectItem(selectedElement, isRemoveButton?) {
+    public deselectItem(selectedElement: HTMLElement, isRemoveButton = false) {
         const isMultipleEditable = this.params.editable && this.params.multiple;
 
         if (!this.params.multiple && this.isReadonly) { //Refactor this case!
@@ -462,7 +457,7 @@ export class Select extends SelectDom {
 
         if (isMultipleEditable && selectedElement) {
             setTimeout(() => {
-                this.params.editItemFn.call(this, this.params.searchFieldGetter(selectedElement.data));
+                this.params.editItemFn.call(this, this.params.searchFieldGetter((selectedElement as any).data));
             })
             // this.setQuery(this.params.searchFieldGetter(selectedElement.data))
             // this.params.editItemFn.bind(this)(this.params.searchFieldGetter(selectedElement.data));
@@ -488,7 +483,7 @@ export class Select extends SelectDom {
     }
 
 
-    updateSelectedElementList(items = []) {
+    updateSelectedElementList(items: any[] = []) {
         this.selectedItems = items;
 
         // if (this.selectedItems.length <= this.params.multipleVisibleLimit) {
@@ -497,7 +492,7 @@ export class Select extends SelectDom {
         this.insertSelectedElements(items);
     }
 
-    addToSelectedElementList(item) {
+    addToSelectedElementList(item: any) {
         this.selectedItems.push(item);
         this.insertSelectedElement(item);
 
@@ -506,10 +501,10 @@ export class Select extends SelectDom {
         // }
     }
 
-    removeSelectedItem(selectedElement) {
+    removeSelectedItem(selectedElement: HTMLElement) {
         if (!selectedElement) return;
 
-        const selectedItem = selectedElement.data;
+        const selectedItem = (selectedElement as any).data;
 
         this.setElementLoading(selectedElement, true);
 
@@ -552,11 +547,11 @@ export class Select extends SelectDom {
 
 
     // Event handlers
-    selectedItemClick(selectedItemElement, isRemoveButton) {
+    selectedItemClick(selectedItemElement: HTMLElement, isRemoveButton = false) {
         if (this.isDisabled) return;
 
-    if (selectedItemElement.data && !isRemoveButton) {
-      this.dispatchCustomInputEvent('click:selected', selectedItemElement, selectedItemElement.data, isRemoveButton);
+    if ((selectedItemElement as any).data && !isRemoveButton) {
+      this.dispatchCustomInputEvent('click:selected', selectedItemElement, (selectedItemElement as any).data, isRemoveButton);
     }
 
     if (this.params.multiple && this.params.removable && !isRemoveButton) return;
@@ -570,7 +565,7 @@ export class Select extends SelectDom {
     // this.dispatchCustomInputEvent();
   }
 
-    listItemClick(listItemElement) {
+    listItemClick(listItemElement: HTMLElement) {
 
         if (this.isDisabled || this.isElementDisabled(listItemElement)) return;
         // Element is selected already
@@ -590,13 +585,13 @@ export class Select extends SelectDom {
         }
     }
 
-    searchChange(value) {
+    searchChange(value: any) {
         this.closeList();
         this.updateDropdownListItems(value)
             .then(this.openList.bind(this))
     }
 
-    searchKeydown(e) {
+    searchKeydown(e: KeyboardEvent) {
         switch (e.key) {
             case 'ArrowUp':
                 if (this.isOpen) {
@@ -651,7 +646,7 @@ export class Select extends SelectDom {
         }
     }
 
-  dispatchCustomInputEvent(eventName, element?, item?, isRemoveButton?) {
+  dispatchCustomInputEvent(eventName: string, element?: HTMLElement, item?: any, isRemoveButton = false) {
     // FIXME
     // case: custom input lose focus after every action
     // if (this.focusBlurInstance.inputElement !== this.tmpl.searchInput) {
@@ -675,4 +670,13 @@ export class Select extends SelectDom {
     //   }));
     // });
   }
+}
+
+export class SelectWeb extends Select {
+    constructor(element: HTMLElement, params: any = {}) {
+        if (params.localStyle !== false) {
+            params.localStyle = (typeof params.localStyle === 'string') ? params.localStyle : String(style)
+        }
+        super(element, params);
+    }
 }

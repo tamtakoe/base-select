@@ -1,13 +1,26 @@
 import template from './appearance.html';
+import { NavGroup } from './nav-group';
 import {RadioGroup} from './radio-group'
+import { getUrlQueryValue } from './utils';
 
 export class Appearance {
-    constructor (containerElement, selectElement, setParams, setCssFramework) {
+    constructor (containerElement: HTMLElement, selectElement: HTMLElement, setParams: (params: any) => void, setCssFramework: (cssFramework: string) => void) {
         containerElement.innerHTML = String(template);
 
-        const extraAppearanceContainerElement = containerElement.querySelector('.extra-appearance-container');
+        const useShadowDom = !!getUrlQueryValue('shadow-dom')
+        const extraAppearanceContainerElement: HTMLElement = containerElement.querySelector('.extra-appearance-container')!;
 
-        const rg = new RadioGroup(containerElement.querySelector('.dropdown-position-radio-group'), [{
+        new NavGroup(containerElement.querySelector('.use-shadow-dom-nav')!, [{
+            title: 'No',
+            active: !useShadowDom,
+            url: '?shadow-dom=false'
+        }, {
+            title: 'Yes',
+            active: useShadowDom,
+            url: '?shadow-dom=true'
+        }])
+        
+        new RadioGroup(containerElement.querySelector('.dropdown-position-radio-group')!, [{
             label: 'Auto',
             value: false,
             checked: true
@@ -17,26 +30,26 @@ export class Appearance {
         }, {
             label: 'Bottom',
             value: 'bottom'
-        }], (value) => {
+        }], (value: string) => {
             setParams({
                 position: value
             });
         });
 
-        new RadioGroup(containerElement.querySelector('.css-framework-radio-group'), [{
+        new RadioGroup(containerElement.querySelector('.css-framework-radio-group')!, [{
             label: 'None',
             value: false,
             checked: true
         }, {
-            label: 'Bootstrap 4',
+            label: 'Bootstrap 5',
             value: 'bootstrap',
         }, {
             label: 'Foundation 6',
             value: 'foundation'
         }, {
-            label: 'Materialize 0.100',
+            label: 'Materialize 1',
             value: 'materialize'
-        }], (value) => {
+        }], (value: string) => {
             switch (value) {
                 case 'bootstrap': showSizeArea();
                     break;
@@ -52,7 +65,7 @@ export class Appearance {
         function showSizeArea() {
             extraAppearanceContainerElement.innerHTML = '<div class="subtitle">Size</div><div></div>';
 
-            new RadioGroup(extraAppearanceContainerElement.children[1], [{
+            new RadioGroup(extraAppearanceContainerElement.children[1] as HTMLElement, [{
                 label: 'Small',
                 value: 'sm'
             }, {
@@ -62,7 +75,7 @@ export class Appearance {
             }, {
                 label: 'Large',
                 value: 'lg'
-            }], (value) => {
+            }], (value: string) => {
                 switch (value) {
                     case 'default' :
                         selectElement.classList.remove('base-select-sm', 'base-select-lg');

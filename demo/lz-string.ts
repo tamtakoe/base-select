@@ -13,9 +13,9 @@ export const LZString = (function() {
     var f = String.fromCharCode;
     var keyStrBase64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     var keyStrUriSafe = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$";
-    var baseReverseDic = {};
+    var baseReverseDic: any = {};
 
-    function getBaseValue(alphabet, character) {
+    function getBaseValue(alphabet: string, character: string) {
         if (!baseReverseDic[alphabet]) {
             baseReverseDic[alphabet] = {};
             for (var i=0 ; i<alphabet.length ; i++) {
@@ -26,7 +26,7 @@ export const LZString = (function() {
     }
 
     var LZString = {
-        compressToBase64 : function (input) {
+        compressToBase64 : function (input: any) {
             if (input == null) return "";
             var res = LZString._compress(input, 6, function(a){return keyStrBase64.charAt(a);});
             switch (res.length % 4) { // To produce valid Base64
@@ -38,25 +38,25 @@ export const LZString = (function() {
             }
         },
 
-        decompressFromBase64 : function (input) {
+        decompressFromBase64 : function (input: any) {
             if (input == null) return "";
             if (input == "") return null;
-            return LZString._decompress(input.length, 32, function(index) { return getBaseValue(keyStrBase64, input.charAt(index)); });
+            return LZString._decompress(input.length, 32, function(index: number) { return getBaseValue(keyStrBase64, input.charAt(index)); });
         },
 
-        compressToUTF16 : function (input) {
+        compressToUTF16 : function (input: any) {
             if (input == null) return "";
             return LZString._compress(input, 15, function(a){return f(a+32);}) + " ";
         },
 
-        decompressFromUTF16: function (compressed) {
+        decompressFromUTF16: function (compressed: any) {
             if (compressed == null) return "";
             if (compressed == "") return null;
-            return LZString._decompress(compressed.length, 16384, function(index) { return compressed.charCodeAt(index) - 32; });
+            return LZString._decompress(compressed.length, 16384, function(index: number) { return compressed.charCodeAt(index) - 32; });
         },
 
         //compress into uint8array (UCS-2 big endian format)
-        compressToUint8Array: function (uncompressed) {
+        compressToUint8Array: function (uncompressed: any) {
             var compressed = LZString.compress(uncompressed);
             var buf=new Uint8Array(compressed.length*2); // 2 bytes per character
 
@@ -69,7 +69,7 @@ export const LZString = (function() {
         },
 
         //decompress from uint8array (UCS-2 big endian format)
-        decompressFromUint8Array:function (compressed) {
+        decompressFromUint8Array:function (compressed: any) {
             if (compressed===null || compressed===undefined){
                 return LZString.decompress(compressed);
             } else {
@@ -78,7 +78,7 @@ export const LZString = (function() {
                     buf[i]=compressed[i*2]*256+compressed[i*2+1];
                 }
 
-                var result = [];
+                var result: any = [];
                 buf.forEach(function (c) {
                     result.push(f(c));
                 });
@@ -90,34 +90,34 @@ export const LZString = (function() {
 
 
         //compress into a string that is already URI encoded
-        compressToEncodedURIComponent: function (input) {
+        compressToEncodedURIComponent: function (input: any) {
             if (input == null) return "";
             return LZString._compress(input, 6, function(a){return keyStrUriSafe.charAt(a);});
         },
 
         //decompress from an output of compressToEncodedURIComponent
-        decompressFromEncodedURIComponent:function (input) {
+        decompressFromEncodedURIComponent:function (input: any) {
             if (input == null) return "";
             if (input == "") return null;
             input = input.replace(/ /g, "+");
-            return LZString._decompress(input.length, 32, function(index) { return getBaseValue(keyStrUriSafe, input.charAt(index)); });
+            return LZString._decompress(input.length, 32, function(index: number) { return getBaseValue(keyStrUriSafe, input.charAt(index)); });
         },
 
-        compress: function (uncompressed) {
+        compress: function (uncompressed: any) {
             return LZString._compress(uncompressed, 16, function(a){return f(a);});
         },
-        _compress: function (uncompressed, bitsPerChar, getCharFromInt) {
+        _compress: function (uncompressed: any, bitsPerChar: number, getCharFromInt: (c: number) => any) {
             if (uncompressed == null) return "";
             var i, value,
-                context_dictionary= {},
-                context_dictionaryToCreate= {},
+                context_dictionary: any = {},
+                context_dictionaryToCreate: any = {},
                 context_c="",
                 context_wc="",
                 context_w="",
                 context_enlargeIn= 2, // Compensate for the first entry which should not count
                 context_dictSize= 3,
                 context_numBits= 2,
-                context_data=[],
+                context_data: any[] = [],
                 context_data_val=0,
                 context_data_position=0,
                 ii;
@@ -323,24 +323,24 @@ export const LZString = (function() {
             return context_data.join('');
         },
 
-        decompress: function (compressed) {
+        decompress: function (compressed: any) {
             if (compressed == null) return "";
             if (compressed == "") return null;
-            return LZString._decompress(compressed.length, 32768, function(index) { return compressed.charCodeAt(index); });
+            return LZString._decompress(compressed.length, 32768, function(index: number) { return compressed.charCodeAt(index); });
         },
 
-        _decompress: function (length, resetValue, getNextValue) {
-            var dictionary = [],
-                next,
+        _decompress: function (length: number, resetValue: any, getNextValue: any) {
+            var dictionary: (number|string)[] = [],
+                next: number,
                 enlargeIn = 4,
                 dictSize = 4,
                 numBits = 3,
-                entry = "",
-                result = [],
-                i,
+                entry = '',
+                result: (number|string)[] = [],
+                i = 0,
                 w,
                 bits, resb, maxpower, power,
-                c,
+                c: number | string = '',
                 data = {val:getNextValue(0), position:resetValue, index:1};
 
             for (i = 0; i < 3; i += 1) {
@@ -467,7 +467,7 @@ export const LZString = (function() {
                 }
 
                 if (dictionary[c]) {
-                    entry = dictionary[c];
+                    entry = dictionary[c] as string;
                 } else {
                     if (c === dictSize) {
                         entry = w + w.charAt(0);

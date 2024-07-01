@@ -66,7 +66,7 @@ export abstract class SelectDom {
         value: undefined,
         items: [],
 
-        getItems: (query?: any, selectedItemsForQuery?: any[]) => [],
+        getItems: (query?: any, selectedItemsForQuery?: any[]) => [] as any,
         getItemsByValue: undefined, //(value?) => [],
 
         // Fields
@@ -86,9 +86,9 @@ export abstract class SelectDom {
         selectedItemLabelGetter: noopPipe,
         dropdownItemLabelGetter: noopPipe,
         groupLabelGetter: noopPipe,
-        groupFieldGetter: (item) => '',
+        groupFieldGetter: (item: any) => '',
         customAreaGetter: noop,
-        infoGetter: (hiddenItemsNumber) => '',
+        infoGetter: (hiddenItemsNumber: any) => '',
 
         // New item
         creatable: false, //{id: null, name: $query, category: 'shoes'}
@@ -118,7 +118,7 @@ export abstract class SelectDom {
 
     params: any = Object.assign({}, this.paramsDefault);
     // value;
-    selectedItems = [];
+    selectedItems: any[] = [];
     elem: any;
     tmpl: any = {};
     isOpen: boolean = false; // Dropdown is opened
@@ -129,20 +129,20 @@ export abstract class SelectDom {
     isDisabled: boolean = false;
     isReadonly: boolean = false;
     isDropdownAbove: boolean = false;
-    activeListElement;
-    activeSelectedElement;
+    activeListElement: HTMLElement;
+    activeSelectedElement: HTMLElement;
 
     unbindFocusBlur = noop;
-    focusBlurInstance = null;
+    focusBlurInstance: any = null;
 
     // Handlers
-    abstract searchChange(value): void;
-    abstract searchKeydown(e): void;
-    abstract selectedItemClick(element, isRemoveButton?): void;
-    abstract listItemClick(element): void;
+    abstract searchChange(value: any): void;
+    abstract searchKeydown(e: Event): void;
+    abstract selectedItemClick(element: HTMLElement, isRemoveButton?: boolean): void;
+    abstract listItemClick(element: HTMLElement): void;
     abstract inputFieldClick(): void;
 
-    constructor(element, style?) {
+    constructor(element: Element, style?: string | boolean) {
         let styleElement;
 
         // Include style to component dom (useful for web-component shadow dom)
@@ -261,7 +261,7 @@ export abstract class SelectDom {
         this.isLoading = isLoading;
     }
 
-    setElementLoading(element, isLoading) {
+    setElementLoading(element: Element, isLoading = false) {
         element.classList[isLoading ? ADD_CLASS_METHOD_NAME : REMOVE_CLASS_METHOD_NAME](CssClass.loading);
     }
 
@@ -270,11 +270,11 @@ export abstract class SelectDom {
         this.isRemovable = isRemovable;
     }
 
-    setElementDisabled(element, isDisabled: boolean) {
+    setElementDisabled(element: Element, isDisabled: boolean) {
         element.classList[isDisabled ? ADD_CLASS_METHOD_NAME : REMOVE_CLASS_METHOD_NAME](CssClass.disabled);
     }
 
-    isElementDisabled(element) {
+    isElementDisabled(element: Element) {
         return element.classList.contains(CssClass.disabled)
     }
 
@@ -380,19 +380,21 @@ export abstract class SelectDom {
         return this.focusBlurInstance.inputElement.value;
     }
 
-    isListElementSelected(element) {
+    isListElementSelected(element: Element) {
         return element.classList.contains(CssClass.selected);
     }
 
-    setListElementSelected(element) {
+    setListElementSelected(element: Element) {
         if (!element.classList.contains(CssClass.selected)) {
-            return element.classList.add(CssClass.selected) || true;
+            element.classList.add(CssClass.selected);
+            return true;
         }
     }
 
-    unsetListElementSelected(element) {
+    unsetListElementSelected(element: Element) {
         if (element.classList.contains(CssClass.selected)) {
-            return element.classList.remove(CssClass.selected) || true;
+            element.classList.remove(CssClass.selected)
+            return true;
         }
     }
 
@@ -417,15 +419,15 @@ export abstract class SelectDom {
     }
 
 
-    getSelectedItemElementByItem(item) {
+    getSelectedItemElementByItem(item: any) {
         const trackFieldGetter = this.params.trackFieldGetter;
 
         return Array.from(this.tmpl.searchContainer.children).find((element: any) => {
             return element.data && trackFieldGetter(element.data) === trackFieldGetter(item);
-        })
+        }) as HTMLElement
     }
 
-    getListElementByItem(item) {
+    getListElementByItem(item: any) {
         const trackFieldGetter = this.params.trackFieldGetter;
         const groupElements = this.tmpl.dropdownContainer.children;
 
@@ -443,12 +445,12 @@ export abstract class SelectDom {
     }
 
     // Element constructors
-    updateLabel(element, labelGetter, item, query?, extraLabelElement?){
+    updateLabel(element: HTMLElement, labelGetter: Function, item: any, query?: string, extraLabelElement?: HTMLElement | string){
         const label = labelGetter(item, query);
         // console.log(item.name, isDisabled);
 
         if (typeof label === 'string' || typeof label === 'number') {
-            extraLabelElement = extraLabelElement ? extraLabelElement.outerHTML : '';
+            extraLabelElement = extraLabelElement ? (extraLabelElement as HTMLElement).outerHTML : '';
             element.innerHTML = String(label) + extraLabelElement;
 
         } else if (label) {
@@ -456,7 +458,7 @@ export abstract class SelectDom {
             element.appendChild(label);
 
             if (extraLabelElement) {
-                element.appendChild(extraLabelElement.cloneNode(true));
+                element.appendChild((extraLabelElement as HTMLElement).cloneNode(true));
             }
         }
 
@@ -467,7 +469,7 @@ export abstract class SelectDom {
         return element;
     }
 
-    createListItemsGroupElement(groupName) {
+    createListItemsGroupElement(groupName: string) {
         const itemsGroupElement = this.tmpl.optionGroup.cloneNode();
 
         itemsGroupElement.data = groupName;
@@ -484,7 +486,7 @@ export abstract class SelectDom {
         return itemsGroupElement;
     }
 
-    createListItemElement(item) {
+    createListItemElement(item: any) {
         const optionElement = this.tmpl.option.cloneNode();
         const isDisabled = this.params.disabledFieldGetter(item);
 
@@ -495,7 +497,7 @@ export abstract class SelectDom {
         return optionElement;
     }
 
-    createSelectedItemElement(item) {
+    createSelectedItemElement(item: any) {
         const selectedElement = this.tmpl.selection.cloneNode();
         const selectedItemLabel = this.params.selectedItemLabelGetter(item);
 
@@ -535,12 +537,12 @@ export abstract class SelectDom {
     }
 
     // DOM manipulations
-    insertSelectedElements(items = []) {
+    insertSelectedElements(items: any[] = []) {
         updateElements(this.tmpl.searchContainer, items, this.createSelectedItemElement.bind(this), this.params.trackFieldGetter, true);
         this.postRenderSelectedElements();
     }
 
-    insertSelectedElement(item) {
+    insertSelectedElement(item: any) {
         const itemElement = this.createSelectedItemElement(item);
 
         itemElement.data = item;
@@ -548,12 +550,12 @@ export abstract class SelectDom {
         this.postRenderSelectedElements();
     }
 
-    removeElement(element) {
+    removeElement(element: any) {
         element.remove();
         this.postRenderSelectedElements(); //!!
     }
 
-    insertListItems(items = [], query = '') {
+    insertListItems(items: any[] = [], query = '') {
         const selectedItems = this.selectedItems.slice();
         const trackFieldGetter = this.params.trackFieldGetter;
 
@@ -602,7 +604,7 @@ export abstract class SelectDom {
     }
 
     // Selected items controller
-    setActiveSelectedElement(element?) {
+    setActiveSelectedElement(element?: HTMLElement) {
         if (this.activeSelectedElement) {
             this.activeSelectedElement.classList.remove(CssClass.active);
             this.activeSelectedElement = null;
@@ -615,7 +617,7 @@ export abstract class SelectDom {
     }
 
     // List elements controller
-    setActiveListElement(element?) {
+    setActiveListElement(element?: HTMLElement) {
         // if (!element) return;
         if (this.activeListElement) {
             this.activeListElement.classList.remove(CssClass.active);
@@ -641,7 +643,7 @@ export abstract class SelectDom {
         this.setActiveListElement(firstListElement);
     }
 
-    setNextActiveListElement(isPrevious?: boolean, parentNode?) {
+    setNextActiveListElement(isPrevious?: boolean, parentNode?: HTMLElement) {
         try {
             const activeElement = this.activeListElement;
 
@@ -655,7 +657,7 @@ export abstract class SelectDom {
             //debugger
 
             if (!this.isDataElement(nextElement)) {
-                const nextGroup = this.getSiblingElement(activeElement.parentNode || parentNode, isPrevious);
+                const nextGroup = this.getSiblingElement((activeElement as any).parentNode || parentNode, isPrevious);
 
                 if (this.isDataElement(nextGroup)) {
                     nextElement = this.findFirstChildElementWithData(nextGroup, isPrevious);
@@ -684,11 +686,11 @@ export abstract class SelectDom {
     //     return this.activeListElement;
     // }
 
-    getSiblingElement(element, isPrevious?: boolean) {
+    getSiblingElement(element: HTMLElement, isPrevious?: boolean) {
         const siblingFieldName = isPrevious ? 'previousSibling' : 'nextSibling';
 
         do  {
-            element = element && element[siblingFieldName];
+            element = element && element[siblingFieldName] as HTMLElement;
 
         } while (element && !this.isDataElement(element));
 
@@ -707,14 +709,14 @@ export abstract class SelectDom {
         return this.findLastChildElementWithData(lastGroup);
     }
 
-    findFirstChildElementWithData(containerElement, invert?: boolean) {
+    findFirstChildElementWithData(containerElement: HTMLElement, invert?: boolean) {
         if (!containerElement) return;
 
         const total = containerElement.children.length;
 
         for (let f = 0, l = total - 1; f < total; f++, l--) {
             const i = invert ? l : f;
-            const childElement = containerElement.children[i];
+            const childElement = containerElement.children[i] as HTMLElement;
 
             if (this.isDataElement(childElement)) {
                 return childElement;
@@ -722,13 +724,13 @@ export abstract class SelectDom {
         }
     }
 
-    findLastChildElementWithData(containerElement) {
+    findLastChildElementWithData(containerElement: HTMLElement) {
         return this.findFirstChildElementWithData(containerElement, true);
     }
 
-    isDataElement(element) {
+    isDataElement(element: HTMLElement) {
         // Enabled element node with data
-        return element && element.nodeType === 1 && element.data !== undefined && !this.isElementDisabled(element);
+        return element && element.nodeType === 1 && (element as any).data !== undefined && !this.isElementDisabled(element);
     }
 
     // Event handlers
@@ -753,22 +755,22 @@ export abstract class SelectDom {
     //     this.searchChange(e.target.value);
     // };
 
-    searchInputHandler = debounceEventValue((value) => {
+    searchInputHandler = debounceEventValue((value: any) => {
         this.searchChange(value);
     }, this.params.debounce);
 
 
-    searchKeydownHandler = (e) => {
+    searchKeydownHandler = (e: Event) => {
         this.searchKeydown(e);
     };
 
-    searchContainerClickHandler = (e) => {
+    searchContainerClickHandler = (e: Event) => {
         //this.focus(); //Maybe don't need
 
-        const selectedItemElement = getElementContainer(e.target, this.tmpl.dropdownContainer, CssClass.selectedItem);
+        const selectedItemElement = getElementContainer(e.target as HTMLElement, this.tmpl.dropdownContainer, CssClass.selectedItem);
 
         if (selectedItemElement) {
-            const selectedItemRemoveElement = getElementContainer(e.target, selectedItemElement, CssClass.selectedItemRemove);
+            const selectedItemRemoveElement = getElementContainer(e.target as HTMLElement, selectedItemElement, CssClass.selectedItemRemove);
 
             this.selectedItemClick(selectedItemElement, !!selectedItemRemoveElement);
 
@@ -777,8 +779,8 @@ export abstract class SelectDom {
         }
     };
 
-    listItemClickHandler = (e) => {
-        const listItemElement = getElementContainer(e.target, this.tmpl.dropdownContainer,  CssClass.listItem);
+    listItemClickHandler = (e: Event) => {
+        const listItemElement = getElementContainer(e.target as HTMLElement, this.tmpl.dropdownContainer,  CssClass.listItem);
 
         if (listItemElement) {
             this.listItemClick(listItemElement);
@@ -787,7 +789,7 @@ export abstract class SelectDom {
             setTimeout(() => {
                 if (!this.isOpen) return;
 
-                const nextListItemElement = getElementContainer(document.elementFromPoint(e.pageX, e.pageY) as HTMLElement, this.tmpl.dropdownContainer, CssClass.listItem) || this.getFirstListElement();
+                const nextListItemElement = getElementContainer(document.elementFromPoint((e as any).pageX, (e as any).pageY) as HTMLElement, this.tmpl.dropdownContainer, CssClass.listItem) || this.getFirstListElement();
 
                 if (nextListItemElement) {
                     this.setActiveListElement(nextListItemElement);
@@ -797,13 +799,13 @@ export abstract class SelectDom {
         }
     };
 
-    listItemMousemoveHandler = (e) => {
-        const optionElement = getElementContainer(e.target, this.tmpl.dropdownContainer, CssClass.listItem);
+    listItemMousemoveHandler = (e: Event) => {
+        const optionElement = getElementContainer(e.target as HTMLElement, this.tmpl.dropdownContainer, CssClass.listItem);
 
         if (optionElement && optionElement !== this.activeListElement) {
             this.setActiveListElement(optionElement);
         }
     };
 
-    stopImmediatePropagation = (e) => e.stopImmediatePropagation();
+    stopImmediatePropagation = (e: Event) => e.stopImmediatePropagation();
 }

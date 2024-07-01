@@ -5,7 +5,7 @@ import {RadioGroup} from './radio-group'
 
 export class ValueGenerator {
 
-    constructor(containerElement, setParams, getLoadedItems, updateValue) {
+    constructor(containerElement: HTMLElement, setParams: any, getLoadedItems: Function, updateValue: Function) {
         containerElement.innerHTML = String(template);
 
         const codeAreaElement: any = containerElement.querySelector('.example-code-area');
@@ -20,9 +20,9 @@ export class ValueGenerator {
         const valueDelayInputElement: any = containerElement.querySelector('#valueDelayInput');
 
         let predefinedValue = createValue(getLoadedItems(), false);
-        let customValue;
+        let customValue: any;
 
-        const codeArea = new CodeArea(codeAreaElement, {isJson: true, successCallback: (value) => customValue = value});
+        const codeArea = new CodeArea(codeAreaElement, {isJson: true, successCallback: (value: any) => customValue = value});
 
         codeArea.setCode(JSON.stringify(predefinedValue, null, 2));
         hideElement(valueItemArrayGroupElement);
@@ -33,7 +33,7 @@ export class ValueGenerator {
             checked: true
         }, {
             label: 'Custom',
-        }], (value) => {
+        }], (value: any) => {
             if (value) {
                 codeArea.editMode(false);
                 showElement(valueItemPredefinedGroup);

@@ -3,7 +3,7 @@ import {showElement, hideElement, createValue, getRandomItems, createGetter} fro
 import {CodeArea} from './code-area'
 
 export class ItemsGenerator {
-    constructor(containerElement, originalItems, setParams, setLoadedItems) {
+    constructor(containerElement: HTMLElement, originalItems: any[], setParams: any, setLoadedItems: Function) {
         containerElement.innerHTML = String(template);
 
         const codeAreaElement: any = containerElement.querySelector('.example-code-area');

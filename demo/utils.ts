@@ -5,7 +5,7 @@ export const originalItems = toArray(shopArr);
 
 export function noop() {}
 
-function roundToEven(x) {
+function roundToEven(x: number) {
     return x % 2 ? x + 1 : x
 }
 
@@ -22,7 +22,7 @@ function greatestCommonDivisor(arr: number[]) {
     return x;
 }
 
-export function fnToStr(fn, space?: number) {
+export function fnToStr(fn: Function, space?: number) {
     const spaceStr = '          ';
     let fnStr = String(fn);
 
@@ -41,9 +41,9 @@ export function fnToStr(fn, space?: number) {
     return fnStr.replace(spaceRregexp, spaceStr.slice(0, space));
 }
 
-export function hashFnv32a(str, asString?, seed?) {
+export function hashFnv32a(str: string, asString = false, seed?: any) {
     /*jshint bitwise:false */
-    let i, l,
+    let i = 0, l = 0,
         hval = (seed === undefined) ? 0x811c9dc5 : seed;
 
     for (i = 0, l = str.length; i < l; i++) {
@@ -57,8 +57,8 @@ export function hashFnv32a(str, asString?, seed?) {
     return hval >>> 0;
 }
 
-export function toArray(arrayLike) {
-    const array = [];
+export function toArray(arrayLike: any) {
+    const array: any[] = [];
     for (let i = 0; ; i++) {
         if (!arrayLike[i]) break;
 
@@ -68,12 +68,12 @@ export function toArray(arrayLike) {
     return array;
 }
 
-export function setEnabledDisabled(inputElement, enabled, lastValues = {}, isNumber?) {
+export function setEnabledDisabled(inputElement: HTMLInputElement, enabled: boolean, lastValues: any = {}, isNumber = false) {
     inputElement.disabled = !enabled;
 
     if (inputElement.disabled) {
         lastValues[inputElement.id] = inputElement.value;
-        inputElement.value = isNumber ? null : 'undefined';
+        inputElement.value = isNumber ? '' : 'undefined';
 
     } else if (lastValues[inputElement.id] !== undefined) {
         inputElement.value = lastValues[inputElement.id];
@@ -84,26 +84,26 @@ export function setEnabledDisabled(inputElement, enabled, lastValues = {}, isNum
 }
 
 //TODO rename to updateParams
-export function updateCheckboxInput(field, checkboxElement, inputElement, setParams, isNumber?) {
+export function updateCheckboxInput(field: string, checkboxElement: HTMLInputElement, inputElement: HTMLInputElement, setParams: any, isNumber = false) {
     const options: any = {};
 
     options[field] = checkboxElement.checked ? (isNumber ? Number(inputElement.value) : inputElement.value) : undefined;
     setParams(options);
 }
 
-export function showElement(...args) {
+export function showElement(...args: any[]) {
     args.forEach(element => element && element.classList.remove('hide'));
 }
 
-export function hideElement(...args) {
+export function hideElement(...args: any[]) {
     args.forEach(element => element && element.classList.add('hide'));
 }
 
-export function addErrorClass(...args) {
+export function addErrorClass(...args: any[]) {
     args.forEach(element => element && element.classList.add('error'));
 }
 
-export function removeErrorClass(...args) {
+export function removeErrorClass(...args: any[]) {
     args.forEach(element => element && element.classList.remove('error'));
 }
 
@@ -141,9 +141,9 @@ export function randomId(length = 5) {
     return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, length);
 }
 
-export function getRandomItems(originalItems, amount, isFlat) {
+export function getRandomItems(originalItems: any[], amount: number, isFlat: boolean) {
     amount = Number(amount);
-    const newArr = [];
+    const newArr: any[] = [];
 
     for (let i = 1; i <= amount; i++) {
         const index = Math.ceil(Math.random() * (originalItems.length - 1));
@@ -163,10 +163,10 @@ export function getRandomItems(originalItems, amount, isFlat) {
     return newArr;
 }
 
-export function createGetter(items, timeout = 1) {
-    return function getItems(query) {
+export function createGetter(items: any[], timeout = 1) {
+    return function getItems(query: any) {
         console.log('query:', query);
-        let options;
+        let options: any;
 
         if (typeof query === 'object' && query.hasOwnProperty('query')) {
             options = query;
@@ -175,14 +175,14 @@ export function createGetter(items, timeout = 1) {
 
         return new Promise((resolve) => {
             setTimeout(() => {
-                resolve(ascSort(items, query, (item) => item.name, options));
+                resolve(ascSort(items, query, (item: any) => item.name, options));
             }, Number(timeout) * 1000)
         })
     }
 }
 
-export function fnGroupToggleListener(fnGroupElement, fnStorage, fieldName, e) {
-    const element = e.target;
+export function fnGroupToggleListener(fnGroupElement: HTMLElement, fnStorage: any, fieldName: string, e: Event) {
+    const element: HTMLElement = e.target as HTMLElement;
     const isActive = element.classList.contains('active');
 
     Array.from(fnGroupElement.querySelectorAll('.active')).forEach((element: any) => element.classList.remove('active'));
@@ -228,7 +228,7 @@ export function fnGroupToggleListener(fnGroupElement, fnStorage, fieldName, e) {
  *                 is converted into a Date object; otherwise, it is left as a String.
  */
 class JSONFN {
-    stringify(obj) {
+    stringify(obj: any) {
         return JSON.stringify(obj, function (key, value) {
             let fnBody;
 
@@ -247,7 +247,10 @@ class JSONFN {
         });
     };
 
-    parse(str, date2obj?) {
+    parse(str: string, date2obj?: boolean) {
+        if (!str) {
+            return
+        }
         const iso8061 = date2obj ? /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/ : false;
 // debugger
         return JSON.parse(str, function (key, value) {
@@ -279,9 +282,15 @@ class JSONFN {
         });
     };
 
-    clone(obj, date2obj?) {
+    clone(obj: any, date2obj?: any) {
         return this.parse(this.stringify(obj), date2obj);
     };
 }
 
 export const JSONfn = new JSONFN();
+
+export function getUrlQueryValue(paramName: string) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const value = urlParams.get(paramName);
+    return value === 'false' ? false : (value === 'true' ? true : value);
+}

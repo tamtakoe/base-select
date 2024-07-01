@@ -1,93 +1,84 @@
-const path = require('path');
+const path = require("path")
+const { parseArgs } = require('util');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FileManagerPlugin = require('filemanager-webpack-plugin');
+const { values: args } = parseArgs({options: { mode: { type: 'string' }}, strict: false });
+const isProduction = args.mode === 'production'
 
-const noShadowDom = process.argv.indexOf('--noShadowDom') !== -1;
-console.log('-----');
-console.log(process.argv);
-console.log('arguments: ' + process.argv.slice(2));
-console.log(noShadowDom);
-
-const webpackConfig = {
-    mode: 'development',
-    entry: './index.ts',
-    // devtool: 'inline-source-map',
-    devtool: 'source-map',
-    devServer: {
-        contentBase: './',
-        // compress: true,
-        host: 'localhost',
-        port: 3080,
-        watchOptions: {
-            ignored: /node_modules/
+module.exports = {
+   entry: {
+      'index':'./index.ts',
+      'select': './src/select.ts',
+      'select-base': './src/select.scss',
+      'select-bootstrap': './src/select-bootstrap.scss',
+      'select-material': './src/select-material.scss',
+   },
+   output: {
+      filename: '[name].js',
+      path: path.resolve(__dirname, "dist"),
+      clean: true,
+      library: {
+        type: 'umd', // Exports as ES6-like module and as global variables
+      }
+  },
+  module: {
+    rules: [
+        { // Convert ans concat .ts files to .js
+            test: /\.tsx?$/,
+            use: {
+              loader: 'ts-loader',
+              options: {
+                configFile: isProduction ? 'tsconfig.build.json' : 'tsconfig.json',
+              }
+            },
+            exclude: /node_modules/,
         },
-        inline: true
-    },
-    module: {
-        rules: [
-            {
-                test: /\.ts$/,
-                loader: 'awesome-typescript-loader?configFileName=./tsconfig.json',
-                exclude: /node_modules/
-            },
-            {
-                test: /\.(css|scss)$/,
-                use: [
-                    // {
-                    //     loader: 'style-loader',
-                    //     options: {
-                    //         sourceMap: true,
-                    //     },
-                    // },
-                    {
-                        loader: 'css-loader',
-                        // options: {
-                        //     modules: {
-                        //         localIdentName: 'base-select'
-                        //     }
-                        // }
-                    },
-                    {
-                        loader: 'resolve-url-loader',
-                    },
-                    {
-                        loader: 'sass-loader?outputStyle=expanded&sourceMap',
-                    },
-                ],
-            },
-            {
-                test: /\.html$/,
-                use: {loader: 'html-loader?exportAsEs6Default'}
-            }, {
-                test: /\.(eot|ttf|woff|woff2)$/,
-                loader: 'file-loader?name=fonts/[name].[ext]',
-            }, {
-                test: /\.(jpe?g|png|gif|svg)$/i,
-                loader: 'url-loader?limit=10000&hash=sha512&digest=hex&name=[hash].[ext]',
-            },
-        ],
-    },
-    resolve: {
-        extensions: ['.tsx', '.ts', '.js', '.css', '.scss', '.html', '.json']
-    },
-    output: {
-        filename: 'select.js',
-        path: path.resolve(__dirname, 'dist'),
-        library: 'select',
-        libraryTarget: 'umd',
-        umdNamedDefine: true
-    },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: 'index.html',
-            meta: noShadowDom ? {opts: 'noShadowDom'} : {}
-        })
-    ]
-};
-
-if (noShadowDom) {
-    webpackConfig.module.rules[1].use.unshift({
-        loader: 'style-loader'
-    });
+        {
+            test: /\.s[ac]ss$/,
+            oneOf: [
+              {
+                resourceQuery: /module/, // Convert .scss?module imports to inline ES6 modules
+                use: ["css-loader", "sass-loader"],
+              }, { // Convert .scss files to .css 
+                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+              },
+            ],
+        },
+        { // Allow to import .html-templates to .ts-files
+            test: /\.html$/,
+            use: "html-loader",
+        }
+    ],
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].css'
+    })
+  ].concat(isProduction ? [
+    new FileManagerPlugin({
+      events: {
+        onEnd: {
+          copy: [
+            { source: './dist/src/select.d.ts', destination: './dist/select.d.ts' },
+            { source: './index-demo.html', destination: './dist/index.html' },
+            { source: './index.css', destination: './dist/index.css' }
+          ],
+          delete: [ './dist/demo', './dist/src', './dist/select-*.js' ]
+        }
+      }
+    })
+  ] : [
+    new HtmlWebpackPlugin({ // Serve index.html
+      template: path.resolve(__dirname, "index.html"),
+      chunks: ['index']
+    })
+  ]),
+  devtool: isProduction ? false : "inline-source-map",
+  devServer: {
+    hot: true
+  },
 }
-
-module.exports = webpackConfig;

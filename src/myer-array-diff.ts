@@ -49,7 +49,7 @@ const DIFF_EQUAL = 0;
  *     instead.
  * @return {!Array.<!diff_match_patch.Diff>} Array of diff tuples.
  */
-diff_match_patch.prototype.diff_main = function(text1, text2, opt_deadline) {
+diff_match_patch.prototype.diff_main = function(text1: string, text2: string, opt_deadline: number) {
     // Set a deadline by which time the diff must be complete.
     if (typeof opt_deadline === 'undefined') {
         if (this.Diff_Timeout <= 0) {
@@ -110,8 +110,8 @@ diff_match_patch.prototype.diff_main = function(text1, text2, opt_deadline) {
  * @return {!Array.<!diff_match_patch.Diff>} Array of diff tuples.
  * @private
  */
-diff_match_patch.prototype.diff_compute_ = function(text1, text2, deadline) {
-    let diffs;
+diff_match_patch.prototype.diff_compute_ = function(text1: string, text2: string, deadline: number) {
+    let diffs: any;
 
     if (!text1.length) {
         // Just add some text (speedup).
@@ -179,7 +179,7 @@ diff_match_patch.prototype.diff_compute_ = function(text1, text2, deadline) {
  * @return {!Array.<!diff_match_patch.Diff>} Array of diff tuples.
  * @private
  */
-diff_match_patch.prototype.diff_bisect_ = function(text1, text2, deadline) {
+diff_match_patch.prototype.diff_bisect_ = function(text1: string, text2: string, deadline: number) {
     // Cache the text lengths to prevent multiple calls.
     const text1_length = text1.length;
     const text2_length = text2.length;
@@ -300,7 +300,7 @@ diff_match_patch.prototype.diff_bisect_ = function(text1, text2, deadline) {
  * @return {!Array.<!diff_match_patch.Diff>} Array of diff tuples.
  * @private
  */
-diff_match_patch.prototype.diff_bisectSplit_ = function(text1, text2, x, y, deadline) {
+diff_match_patch.prototype.diff_bisectSplit_ = function(text1: string, text2: string, x: number, y: number, deadline: number) {
     const text1a = text1.slice(0, x);
     const text2a = text2.slice(0, y);
     const text1b = text1.slice(x);
@@ -319,7 +319,7 @@ diff_match_patch.prototype.diff_bisectSplit_ = function(text1, text2, x, y, dead
  * @return {number} The number of characters common to the start of each
  *     string.
  */
-diff_match_patch.prototype.diff_commonPrefix = function(text1, text2) {
+diff_match_patch.prototype.diff_commonPrefix = function(text1: string, text2: string) {
     // Quick check for common null cases.
     if (!text1.length || !text2.length || text1[0] !== text2[0]) {
         return 0;
@@ -348,7 +348,7 @@ diff_match_patch.prototype.diff_commonPrefix = function(text1, text2) {
  * @param {string} text2 Second string.
  * @return {number} The number of characters common to the end of each string.
  */
-diff_match_patch.prototype.diff_commonSuffix = function(text1, text2) {
+diff_match_patch.prototype.diff_commonSuffix = function(text1: string, text2: string) {
     // Quick check for common null cases.
     if (!text1.length || !text2.length ||
         text1[text1.length - 1] !== text2[text2.length - 1]) {
@@ -383,7 +383,7 @@ diff_match_patch.prototype.diff_commonSuffix = function(text1, text2) {
  *     text2 and the common middle.  Or null if there was no match.
  * @private
  */
-diff_match_patch.prototype.diff_halfMatch_ = function(text1, text2) {
+diff_match_patch.prototype.diff_halfMatch_ = function(text1: string, text2: string) {
     if (this.Diff_Timeout <= 0) {
         // Don't risk returning a non-optimal diff if we have unlimited time.
         return null;
@@ -407,11 +407,11 @@ diff_match_patch.prototype.diff_halfMatch_ = function(text1, text2) {
      *     of shorttext and the common middle.  Or null if there was no match.
      * @private
      */
-    function diff_halfMatchI_(longtext, shorttext, i) {
+    function diff_halfMatchI_(longtext: string, shorttext: string, i: number) {
         // Start with a 1/4 length slice at position i as a seed.
         const seed = longtext.slice(i, i + Math.floor(longtext.length / 4));
         let j = -1;
-        let best_common = [];
+        let best_common: any = [];
         let best_longtext_a, best_longtext_b, best_shorttext_a, best_shorttext_b;
 
         while ((j = dmp.find_csa(shorttext, seed, j + 1)) !== -1) {
@@ -472,13 +472,13 @@ diff_match_patch.prototype.diff_halfMatch_ = function(text1, text2) {
  * Any edit section can move as long as it doesn't cross an equality.
  * @param {!Array.<!diff_match_patch.Diff>} diffs Array of diff tuples.
  */
-diff_match_patch.prototype.diff_cleanupMerge = function(diffs) {
+diff_match_patch.prototype.diff_cleanupMerge = function(diffs: any[]) {
     diffs.push([DIFF_EQUAL, []]);  // Add a dummy entry at the end.
     var pointer = 0;
     var count_delete = 0;
     var count_insert = 0;
-    var text_delete = [];
-    var text_insert = [];
+    var text_delete: string[] = [];
+    var text_insert: string[] = [];
     var commonlength;
     while (pointer < diffs.length) {
         switch (diffs[pointer][0]) {
@@ -592,7 +592,7 @@ diff_match_patch.prototype.diff_cleanupMerge = function(diffs) {
  * @param from_index
  * @returns {*}
  */
-diff_match_patch.prototype.find_csa = function(arr, subarr, from_index) {
+diff_match_patch.prototype.find_csa = function(arr: any[], subarr: any[], from_index: number) {
     let i = from_index >>> 0,
         sl = subarr.length,
         l = arr.length + 1 - sl;
@@ -612,7 +612,7 @@ diff_match_patch.prototype.find_csa = function(arr, subarr, from_index) {
  * @param arr2
  * @returns {boolean}
  */
-diff_match_patch.prototype.compare_arrays = function(arr1, arr2) {
+diff_match_patch.prototype.compare_arrays = function(arr1: any[], arr2: any[]) {
     let i = arr1.length;
 
     if (i !== arr2.length) return false;
@@ -623,7 +623,7 @@ diff_match_patch.prototype.compare_arrays = function(arr1, arr2) {
     return true
 };
 
-diff_match_patch.prototype.transform_to_splice_arguments = function(diffs) {
+diff_match_patch.prototype.transform_to_splice_arguments = function(diffs: any[]) {
     const sDiffs = [];
 
     for (let i = 0, cursor = 0; i < diffs.length; i++) {
@@ -679,8 +679,8 @@ diff_match_patch.prototype.transform_to_splice_arguments = function(diffs) {
  * @param deadline Optional time when the diff should be complete by.
  * @returns {[number , number , any, ...][]} List of editor prescriptions (arguments for splice method)
  */
-diff_match_patch.prototype.diff = function(oldArr, newArr, deadline) {
+diff_match_patch.prototype.diff = function(oldArr: any[], newArr: any[], deadline: number) {
     return this.transform_to_splice_arguments(this.diff_main(oldArr, newArr, deadline));
 };
 
-export const myer = new diff_match_patch();
+export const myer = new (diff_match_patch as any)();

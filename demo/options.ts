@@ -4,7 +4,7 @@ import {setEnabledDisabled, updateCheckboxInput} from './utils';
 export class Options{
     elems: any = {};
 
-    constructor(containerElement, setParams, lastValues: any = {}) {
+    constructor(containerElement: HTMLElement, setParams: any, lastValues: any = {}) {
         containerElement.innerHTML = String(template);
 
         this.elems.multipleCheckboxElement             = containerElement.querySelector('#multipleCheckbox');
@@ -174,7 +174,7 @@ export class Options{
         });
     }
 
-    set(params) {
+    set(params: any) {
         this.elems.multipleCheckboxElement.checked             = params.multiple;
         this.elems.hideSelectedCheckboxElement.checked         = params.hideSelected;
         this.elems.keepOpenedCheckboxElement.checked           = params.keepOpened;

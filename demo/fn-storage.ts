@@ -8,13 +8,13 @@ export class FnStorage {
     storage: any = {};
     radioGroups: any = {};
 
-    constructor (containerElement, options:any = {}, callback:Function = noop) {
+    constructor (containerElement: HTMLElement, options:any = {}, callback: Function = noop) {
         this.elems.containerElement = containerElement;
 
         Object.keys(options).forEach(name => this.createGroup(name, options[name], callback));
     }
 
-    createGroup(groupName, options, callback) {
+    createGroup(groupName: string, options: any, callback: Function) {
         const groupElement: any = document.createElement('div');
         const radioGroupElement = document.createElement('div');
         const codeAreaElement = document.createElement('div');
@@ -24,10 +24,10 @@ export class FnStorage {
         const codeArea = new CodeArea(codeAreaElement, {
             hasSaveBtn: true,
             isFn: true,
-            successCallback: (value) => callback({[groupName]: value}, options.find(option => option.value === undefined))
+            successCallback: (value: any) => callback({[groupName]: value}, options.find((option: any) => option.value === undefined))
         });
 
-        const radioGroup = new RadioGroup(radioGroupElement, options, (value) => {
+        const radioGroup = new RadioGroup(radioGroupElement, options, (value: any) => {
             codeArea.editMode(!value, '');
 
             let textValue = value;
@@ -40,9 +40,12 @@ export class FnStorage {
             }
 
             if (value !== undefined) {
-                callback({
-                    [groupName]: typeof value === 'string' ? undefined : value
-                }, Object.assign({groupName: groupName}, options.find(option => option.value === value)))
+                callback(
+                    {
+                        [groupName]: (typeof value === 'string' ? undefined : value)
+                    }, 
+                    Object.assign({groupName: groupName}, options.find(((option: any) => option.value === value)))
+                )
             }
         });
 
@@ -72,7 +75,7 @@ export class FnStorage {
         Object.keys(this.storage).forEach(group => hideElement(this.storage[group].element))
     }
 
-    set(params) {
+    set(params: any) {
         Object.keys(params).forEach(field => {
             const group = this.storage[field];
             const value = params[field];
