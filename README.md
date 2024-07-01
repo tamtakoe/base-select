@@ -1,7 +1,7 @@
 # BaseSelect component (WIP)
 
 ## Demo
-
+https://tamtakoe.github.io/base-select
 
 ## Usage
 ```bash
