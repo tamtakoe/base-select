@@ -26,7 +26,6 @@ export class Select extends SelectDom {
     //добавить класс binded если используется другой инпут
     public setParams(params: any = {}, emitEvent: boolean = true) {
         // `emitEvent=false` prevents event emitting of value changes in situation if value was changed because multiple flag was changed
-        console.log('setParams', params);
         mergeWithDefaults(this.params, params, this.paramsDefault);
 
         const hasProperty = (property: string) => params.hasOwnProperty(property);
@@ -538,7 +537,6 @@ export class Select extends SelectDom {
                 this.updateValue();
             })
             .catch(error => {
-                console.log('E', error);
                 this.setElementLoading(selectedElement, false);
             })
 

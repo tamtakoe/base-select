@@ -120,7 +120,6 @@ documentRef.addEventListener("DOMContentLoaded", (e: Event) => {
     const select = new SelectWeb(selectElement, selectParams);
 
     selectElement.addEventListener('change', (e: any) => {
-        console.log('V', e.value);
         updateValue(e.value);
     });
 
@@ -207,7 +206,6 @@ documentRef.addEventListener("DOMContentLoaded", (e: Event) => {
             // paramsMask.set(params); //Optimize
             //
             updateUI(select.params);
-            console.log('+', urlParamsStore.get());
 
             urlParamsStore.patch(params);
         }

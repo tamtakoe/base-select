@@ -167,7 +167,6 @@ export function getRandomItems(originalItems: any[], amount: number, isFlat: boo
 
 export function createGetter(items: any[], timeout = 1) {
     return function getItems(query: any) {
-        console.log('query:', query);
         let options: any;
 
         if (typeof query === 'object' && query.hasOwnProperty('query')) {

@@ -100,7 +100,6 @@ export function bindFocusBlur(element: HTMLElement, inputElement: HTMLElement, i
     }
 
     function clickHandler(event: Event) {
-        console.log('+++ clickHandler', !!getElementContainer(event.target as HTMLElement, element), event.target, event.target !== inputElement, (event.target as any).nodeName);
         isMousedown = false;
 
         const activeElement = shadowHost && event.target === shadowHost ? element : event.target as HTMLElement;
