@@ -241,6 +241,186 @@ select.open();
 select.close();
 ```
 
+### Custom styling with getters
+
+BaseSelect provides several getter functions that allow you to customize how elements are displayed. These getters return HTML strings (or DOM elements) that will be used to render the component.
+
+#### selectedItemLabelGetter
+
+Customize how selected items are displayed:
+
+```js
+import { Select, highlight } from 'base-select';
+
+const select = new Select(document.getElementById('select'), {
+    multiple: true,
+    items: [
+        { id: 1, name: 'Item 1', category: 'A' },
+        { id: 2, name: 'Item 2', category: 'B' }
+    ],
+    trackField: 'id',
+    searchField: 'name',
+    valueField: 'id',
+    // Custom styling for selected items
+    selectedItemLabelGetter: (item) => {
+        return `<span style="color: blue; font-weight: bold;">${item.name}</span>`;
+    }
+});
+```
+
+#### dropdownItemLabelGetter
+
+Customize how items in the dropdown list are displayed. This getter receives the query parameter for highlighting search matches:
+
+```js
+import { Select, highlight } from 'base-select';
+
+const select = new Select(document.getElementById('select'), {
+    items: [
+        { id: 1, name: 'Apple', price: 10 },
+        { id: 2, name: 'Banana', price: 5 }
+    ],
+    trackField: 'id',
+    searchField: 'name',
+    valueField: 'id',
+    // Custom styling with search highlighting
+    dropdownItemLabelGetter: (item, query) => {
+        const name = highlight(item.name, query); // Highlight search matches
+        return `${name} <span style="color: gray; font-size: 0.9em;">($${item.price})</span>`;
+    }
+});
+```
+
+#### groupLabelGetter
+
+Customize how group headers are displayed:
+
+```js
+const select = new Select(document.getElementById('select'), {
+    multiple: true,
+    items: [
+        { id: 1, name: 'Shirt', category: 'Clothes' },
+        { id: 2, name: 'Pants', category: 'Clothes' },
+        { id: 3, name: 'Apple', category: 'Food' }
+    ],
+    groupField: 'category',
+    trackField: 'id',
+    searchField: 'name',
+    valueField: 'id',
+    // Custom styling for group headers
+    groupLabelGetter: (label) => {
+        return `<strong style="text-transform: uppercase; color: #666;">${label}</strong>`;
+    }
+});
+```
+
+#### customAreaGetter
+
+Add custom content area inside the dropdown:
+
+```js
+const select = new Select(document.getElementById('select'), {
+    items: [
+        { id: 1, name: 'Item 1' },
+        { id: 2, name: 'Item 2' }
+    ],
+    trackField: 'id',
+    searchField: 'name',
+    valueField: 'id',
+    // Add custom area (e.g., for actions, filters, etc.)
+    customAreaGetter: function() {
+        const customDiv = document.createElement('div');
+        customDiv.className = 'custom-area';
+        customDiv.innerHTML = '<button>Custom Action</button>';
+        customDiv.querySelector('button').addEventListener('click', () => {
+            console.log('Custom action clicked');
+        });
+        return customDiv;
+    }
+});
+```
+
+#### infoGetter
+
+Display information about hidden items when using `multipleVisibleLimit`:
+
+```js
+const select = new Select(document.getElementById('select'), {
+    multiple: true,
+    multipleVisibleLimit: 3, // Show only 3 selected items
+    items: [
+        { id: 1, name: 'Item 1' },
+        { id: 2, name: 'Item 2' },
+        { id: 3, name: 'Item 3' },
+        { id: 4, name: 'Item 4' },
+        { id: 5, name: 'Item 5' }
+    ],
+    trackField: 'id',
+    searchField: 'name',
+    valueField: 'id',
+    // Custom info message for hidden items
+    infoGetter: (hiddenItemsNumber) => {
+        if (hiddenItemsNumber > 0) {
+            return `+${hiddenItemsNumber} more`;
+        }
+        return '';
+    }
+});
+```
+
+#### Complete example with multiple getters
+
+```js
+import { Select, highlight } from 'base-select';
+
+const select = new Select(document.getElementById('select'), {
+    multiple: true,
+    value: [{ id: 1, name: 'Apple', category: 'Fruits', price: 10 }],
+    items: [
+        { id: 1, name: 'Apple', category: 'Fruits', price: 10 },
+        { id: 2, name: 'Banana', category: 'Fruits', price: 5 },
+        { id: 3, name: 'Carrot', category: 'Vegetables', price: 3 }
+    ],
+    groupField: 'category',
+    trackField: 'id',
+    searchField: 'name',
+    valueField: 'id',
+    
+    // Style selected items
+    selectedItemLabelGetter: (item) => {
+        return `<span class="badge">${item.name}</span>`;
+    },
+    
+    // Style dropdown items with price and highlighting
+    dropdownItemLabelGetter: (item, query) => {
+        const highlightedName = highlight(item.name, query, 'mark');
+        return `${highlightedName} <small style="color: #999;">$${item.price}</small>`;
+    },
+    
+    // Style group headers
+    groupLabelGetter: (label) => {
+        return `<i class="icon-folder"></i> ${label}`;
+    },
+    
+    // Add custom area
+    customAreaGetter: function() {
+        const div = document.createElement('div');
+        div.style.padding = '10px';
+        div.style.borderTop = '1px solid #eee';
+        div.innerHTML = '<button>Clear all</button>';
+        div.querySelector('button').onclick = () => {
+            this.setParams({ value: [] });
+        };
+        return div;
+    },
+    
+    // Info about hidden items
+    infoGetter: (hiddenCount) => {
+        return hiddenCount > 0 ? `<span class="info">+${hiddenCount} more</span>` : '';
+    }
+});
+```
+
 ### With css frameworks
 Use the `select-bootstrap.css`, `select-material.css` or `select-foundation.css` (TODO) for Bootstrap, Material etc. frameworks
 
